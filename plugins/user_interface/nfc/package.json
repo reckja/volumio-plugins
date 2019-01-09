@@ -1,0 +1,22 @@
+{
+	"name": "nfc",
+	"version": "1.0.0",
+	"description": "Start and stop playlists via NFC tags",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Oliver Jaegle",
+	"license": "ISC",
+	"volumio_info": {
+		"prettyName": "NFC",
+		"icon": "fa-lightbulb-o",
+		"plugin_type": "user_interface"
+	},
+	"dependencies": {
+		"fs-extra": "^0.28.0",
+		"kew": "^0.7.0",
+		"mfrc522-rpi": "^1.1.0",
+		"v-conf": "^1.4.0"
+	}
+}
