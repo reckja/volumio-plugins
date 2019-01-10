@@ -51,13 +51,6 @@ NFCReader.prototype.onVolumioStart = function () {
 
 	self.logger.info("NFCReader initialized");
 
-
-	// register callback to sniff which playlist is currently playing
-	socket.on('playPlaylist', function (data) {
-		self.currentPlaylist = data.name;
-		self.logger.info('Currently playing playlist', currentPlaylist)
-	});
-
 	return libQ.resolve();
 };
 
@@ -72,6 +65,12 @@ NFCReader.prototype.getConfigurationFiles = function () {
 NFCReader.prototype.onStart = function () {
 	const self = this;
 	const defer = libQ.defer();
+
+	// register callback to sniff which playlist is currently playing
+	socket.on('playPlaylist', function (data) {
+		self.currentPlaylist = data.name;
+		self.logger.info('Currently playing playlist', currentPlaylist)
+	});
 
 	self.registerWatchDaemon()
 		.then(function (result) {

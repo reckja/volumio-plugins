@@ -6,7 +6,7 @@
     {
       "id": "mfrc522_setup",
       "element": "section",
-      "label": "Use your RFID-reader to play plalists",
+      "label": "Use your RFID-reader to play playlists",
       "icon": "fa-plug",
       "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"saveCurrentPlaying"},
       "saveButton": {
