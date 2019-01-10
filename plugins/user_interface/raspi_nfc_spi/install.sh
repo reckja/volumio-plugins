@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "Installing raspi nfc spi Dependencies"
-sudo apt-get update
-# Install the required packages via apt-get
-sudo apt-get -y install
+DPKG_ARCH=`dpkg --print-architecture`
 
-# If you need to differentiate install for armhf and i386 you can get the variable like this
-#DPKG_ARCH=`dpkg --print-architecture`
-# Then use it to differentiate your install
+if [ "$DPKG_ARCH" = "armhf" ];
+then
+    echo "Installing nfc Dependencies - if there are"
+    # we should also verify that the mifare reader is available on /dev/spidev0.0
+    echo "SPI NFC reader plugin installed"
+else
+    echo "This plugin only works on Raspberry PI"
+fi
 
-#requred to end the plugin install
-echo "plugininstallend"
