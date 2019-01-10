@@ -28,7 +28,7 @@ function NFCReader(context) {
 	}
 
 	const spiChannel = 0; //TODO: configure SPI channel
-	self.nfcDaemon = new MFRC522Daemon(spiChannel, handleCardDetected, handleCardRemoved);
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, handleCardDetected, handleCardRemoved, self.logger);
 
 }
 
@@ -170,13 +170,6 @@ NFCReader.prototype.unRegisterWatchDaemon = function () {
 	const self = this;
 
 	self.logger.info(`${ MY_LOG_NAME }: Stopping NFC daemon`);
-	/* 
-	TODO: Mifare RC522 is connected to the SPI bus. As far as I've seen, 
-	there's no option to implement an interrupt-mechanism there, but only 
-	a polling is possible => we'll read (poll) the bus and write the result 
-	into a file. To this file handler, we'll attach a callback triggering 
-	the actual logic
-	*/
 	self.nfcDaemon.stop();
 	return libQ.resolve();
 };

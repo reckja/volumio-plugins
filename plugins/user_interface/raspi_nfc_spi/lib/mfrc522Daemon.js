@@ -3,12 +3,13 @@
 const mfrc522 = require('mfrc522-rpi');
 
 class MFRC522Daemon {
-    constructor(spiChannel, onCardDetected, onCardRemoved, interval = 500) {
+    constructor(spiChannel, onCardDetected, onCardRemoved, logger=console, interval = 500) {
         mfrc522.initWiringPi(spiChannel);
 
         const self = this;
 
         self.interval = interval;
+        self.logger = logger;
 
         self.intervalHandle = null;
         self.currentUID = null;
@@ -35,7 +36,7 @@ class MFRC522Daemon {
     }
 
     start() {
-        JSON.stringify(this, "", 2);
+        logger.info(JSON.stringify(this));
         this.intervalHandle = setInterval(this.watcher, this.interval);
     }
 
