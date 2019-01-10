@@ -8,7 +8,7 @@
       "element": "section",
       "label": "Use your RFID-reader to play plalists",
       "icon": "fa-plug",
-      "onSave": {"type":"controller", "endpoint":"system_controller/gpio-buttons", "method":"saveConfig"},
+      "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"saveCurrentPlaying"},
       "saveButton": {
         "label": "Save",
         "data": [
