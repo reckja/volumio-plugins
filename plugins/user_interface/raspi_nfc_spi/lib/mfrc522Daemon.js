@@ -2,8 +2,10 @@
 
 const mfrc522 = require('mfrc522-rpi');
 
+const DEBOUNCE_THRESHOLD = 5; // max disconnects before it is considered disconnected
+
 class MFRC522Daemon {
-    constructor(spiChannel, onCardDetected, onCardRemoved, logger=console, interval=500) {
+    constructor(spiChannel, onCardDetected, onCardRemoved, logger = console, interval = 500) {
         mfrc522.initWiringPi(spiChannel);
 
         const self = this;
@@ -23,14 +25,19 @@ class MFRC522Daemon {
             //self.logger.info('NFC reader daemon:', JSON.stringify(response));
             if (!response.status) {
                 if (self.currentUID) {
-                    onCardRemoved(self.currentUID);
-                    self.currentUID = null;
+                    if (self.debounceCounter === DEBOUNCE_THRESHOLD) {
+                        onCardRemoved(self.currentUID);
+                        self.currentUID = null;
+                    } else {
+                        self.debounceCounter++;
+                    }
                 }
             } else {
                 const uid = mfrc522.getUid().data;
-//		self.logger.info('UID', JSON.stringify(uid));
+                //self.logger.info('UID', JSON.stringify(uid));
                 if (!self.currentUID || self.currentUID.toString() !== uid.toString()) {
                     self.currentUID = uid;
+                    self.debounceCounter = 0;
                     onCardDetected(self.currentUID);
                 }
             }
