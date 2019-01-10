@@ -28,8 +28,8 @@ class MFRC522Daemon {
                 }
             } else {
                 response = mfrc522.getUid();
-                if (self.currentUID !== response) {
-                    self.currentUID = response;
+                if (self.currentUID !== response.data) {
+                    self.currentUID = response.data;
                     onCardDetected(self.currentUID.data);
                 }
             }
