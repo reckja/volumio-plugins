@@ -20,13 +20,17 @@ function NFCReader(context) {
 	self.commandRouter = self.context.coreCommand;
 	self.logger = self.context.logger;
 
-	self.handleCardDetected = function(uid) {
+	const handleCardDetected = function(uid) {
 		self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
 	}
 
-	self.handleCardRemoved = function(uid) {
+	const handleCardRemoved = function(uid) {
 		self.commandRouter.pushToastMessage('success', 'NFC card removed', serializeUid(uid));
 	}
+
+	const spiChannel = 0; //TODO: configure SPI channel
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, handleCardDetected, handleCardRemoved);
+
 }
 
 NFCReader.prototype.onVolumioStart = function () {
@@ -159,88 +163,21 @@ NFCReader.prototype.registerWatchDaemon = function () {
 	the actual logic
 	*/
 	const spiChannel = 0; //TODO: configure SPI channel
-	new MFRC522Daemon(spiChannel, self.handleCardDetected, self.handleCardRemoved);
-
+	self.nfcDaemon.start();
 	return libQ.resolve();
 };
 
-
-NFCReader.prototype.clearTriggers = function () {
+NFCReader.prototype.unRegisterWatchDaemon = function () {
 	const self = this;
 
-	self.triggers.forEach(function (trigger, index, array) {
-		self.logger.info("GPIO-Buttons: Destroying trigger " + index);
-
-		trigger.unwatchAll();
-		trigger.unexport();
-	});
-
-	self.triggers = [];
-
+	self.logger.info(`${ MY_LOG_NAME }: Stopping NFC daemon`);
+	/* 
+	TODO: Mifare RC522 is connected to the SPI bus. As far as I've seen, 
+	there's no option to implement an interrupt-mechanism there, but only 
+	a polling is possible => we'll read (poll) the bus and write the result 
+	into a file. To this file handler, we'll attach a callback triggering 
+	the actual logic
+	*/
+	self.nfcDaemon.stop();
 	return libQ.resolve();
-};
-
-
-NFCReader.prototype.listener = function (action, err, value) {
-	const self = this;
-
-	const c3 = action.concat('.value');
-	const lastvalue = self.config.get(c3);
-
-	// IF change AND high (or low?)
-	if (value !== lastvalue && value === 1) {
-		//do thing
-		self[action]();
-	}
-	// remember value
-	self.config.set(c3, value);
-};
-
-
-
-
-
-//Play / Pause
-NFCReader.prototype.playPause = function () {
-	//this.logger.info('GPIO-Buttons: Play/pause button pressed');
-	socket.emit('getState', '');
-	socket.once('pushState', function (state) {
-		if (state.status == 'play' && state.service == 'webradio') {
-			socket.emit('stop');
-		} else if (state.status == 'play') {
-			socket.emit('pause');
-		} else {
-			socket.emit('play');
-		}
-	});
-};
-
-//next on playlist
-NFCReader.prototype.next = function () {
-	//this.logger.info('GPIO-Buttons: next-button pressed');
-	socket.emit('next')
-};
-
-//previous on playlist
-NFCReader.prototype.previous = function () {
-	//this.logger.info('GPIO-Buttons: previous-button pressed');
-	socket.emit('prev')
-};
-
-//Volume up
-NFCReader.prototype.volumeUp = function () {
-	//this.logger.info('GPIO-Buttons: Vol+ button pressed');
-	socket.emit('volume', '+');
-};
-
-//Volume down
-NFCReader.prototype.volumeDown = function () {
-	//this.logger.info('GPIO-Buttons: Vol- button pressed\n');
-	socket.emit('volume', '-');
-};
-
-//shutdown
-NFCReader.prototype.shutdown = function () {
-	// this.logger.info('GPIO-Buttons: shutdown button pressed\n');
-	this.commandRouter.shutdown();
 };
