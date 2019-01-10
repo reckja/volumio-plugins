@@ -5,35 +5,37 @@ const mfrc522 = require('mfrc522-rpi');
 class MFRC522Daemon{
     constructor(spiChannel, onCardDetected, onCardRemoved, interval=500) {
         mfrc522.initWiringPi(spiChannel);
-        this.interval = interval;
-        this.onCardDetected = onCardDetected;
-        this.onCardRemoved = onCardRemoved;
+        
+	const self = this;
+	
+	self.interval = interval;
 
-        this.intervalHandle = null;
-        this.currentUID = null;
+        self.intervalHandle = null;
+        self.currentUID = null;
 
-        this.watcher = function (){
+        self.watcher = function (){
             //# reset card
             mfrc522.reset();
 
             //# Scan for cards
             let response = mfrc522.findCard();
             if (!response.status) {
-                if(this.currentUID){
-                    this.onCardRemoved(this.currentUID);
-                    this.currentUID = null;
+                if(self.currentUID){
+                    onCardRemoved(self.currentUID);
+                    self.currentUID = null;
                 }
             } else {
                 response = mfrc522.getUid();
-                if (this.currentUID !== response) {
-                    this.currentUID = response;
-                    this.onCardDetected(this.currentUID);
+                if (self.currentUID !== response) {
+                    self.currentUID = response;
+                    onCardDetected(self.currentUID.data);
                 }
             }
         }
     }
 
     start(){
+	JSON.stringify(this, "", 2);
         this.intervalHandle = setInterval(this.watcher, this.interval);
     }
 
