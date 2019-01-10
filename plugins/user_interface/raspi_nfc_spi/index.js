@@ -2,7 +2,6 @@
 
 const libQ = require('kew');
 const fs = require('fs-extra');
-const Gpio = require('onoff').Gpio;
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:3000');
 const MFRC522Daemon = require('./lib/mfrc522Daemon');
