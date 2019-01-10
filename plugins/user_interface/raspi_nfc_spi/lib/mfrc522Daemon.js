@@ -27,10 +27,11 @@ class MFRC522Daemon {
                     self.currentUID = null;
                 }
             } else {
-                response = mfrc522.getUid();
-                if (self.currentUID !== response.data) {
-                    self.currentUID = response.data;
-                    onCardDetected(self.currentUID.data);
+                const uid = mfrc522.getUid().data;
+//		self.logger.info('UID', JSON.stringify(uid));
+                if (!self.currentUID || self.currentUID.toString() !== uid.toString()) {
+                    self.currentUID = uid;
+                    onCardDetected(self.currentUID);
                 }
             }
         }
