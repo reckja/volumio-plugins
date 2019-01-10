@@ -37,7 +37,7 @@ class MFRC522Daemon {
     }
 
     start() {
-        self.logger.info(JSON.stringify(this));
+        this.logger.info(JSON.stringify(this));
         this.intervalHandle = setInterval(this.watcher, this.interval);
     }
 
