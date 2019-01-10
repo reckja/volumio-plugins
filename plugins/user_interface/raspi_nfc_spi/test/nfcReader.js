@@ -1,11 +1,6 @@
 'use strict';
 
-const libQ = require('kew');
-const fs = require('fs-extra');
-const io = require('socket.io-client');
-const socket = io.connect('http://localhost:3000');
-const MFRC522Daemon = require('./lib/mfrc522Daemon');
-const MY_LOG_NAME = 'RasPi NFC plugin';
+const MFRC522Daemon = require('../lib/mfrc522Daemon');
 
 const serializeUid = function(uid){
 	return uid && uid[0] 
