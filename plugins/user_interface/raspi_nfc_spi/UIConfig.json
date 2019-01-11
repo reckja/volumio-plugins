@@ -4,14 +4,29 @@
   },
   "sections": [
     {
-      "id": "mfrc522_setup",
+      "id": "assign_tokens",
       "element": "section",
-      "label": "Use your RFID-reader to play playlists",
+      "label": "Bring an NFC-token in range of your reader. Then, play the playlist you want to assign - and push the button",
       "icon": "fa-plug",
       "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"saveCurrentPlaying"},
       "saveButton": {
-        "label": "Save",
+        "label": "Assign tag",
         "data": [
+
+        ]
+      },
+      "content": []
+    },
+    {
+      "id": "unassign_tokens",
+      "element": "section",
+      "label": "Bring an NFC-token in range of your reader. The current assignment will be shown. The remove the assignment",
+      "icon": "fa-plug",
+      "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"unassignToken"},
+      "saveButton": {
+        "label": "Assign tag",
+        "data": [
+
         ]
       },
       "content": []

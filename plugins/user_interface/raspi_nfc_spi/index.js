@@ -25,7 +25,7 @@ function NFCReader(context) {
 		self.currentTokenUid = uid;
 		self.logger.info('NFC card detected', self.currentTokenUid);
 		const playlist = self.tokenManager.readToken(self.currentTokenUid);
-		if(playlist && playlist !== self.currentPlaylist){
+		if (playlist && playlist !== self.currentPlaylist) {
 			socket.emit('playPlaylist', playlist);
 		}
 	}
@@ -191,12 +191,41 @@ NFCReader.prototype.unRegisterWatchDaemon = function () {
 NFCReader.prototype.saveCurrentPlaying = function () {
 	const self = this;
 
-	self.logger.info('assigning token UID', self.currentTokenUid, 'to', self.currentPlaylist);
-	
+	if (!self.currentTokenUid) {
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
+		return false;
+	}
+
+	if (!self.currentPlaylist) {
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "Start the playlist which shall be assigned");
+		return false;
+	}
+
+	self.logger.info('I shall assign token UID', self.currentTokenUid, 'to', self.currentPlaylist);
+
 	try {
-		self.currentTokenUid && self.currentPlaylist 
-		&& self.tokenManager.registerToken(self.currentTokenUid, self.currentPlaylist );
+		if (self.currentTokenUid && self.currentPlaylist
+			&& self.tokenManager.registerToken(self.currentTokenUid, self.currentPlaylist)) {
+			
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
+			return true;
+		};
 	} catch (err) {
 		self.logger.info(`${MY_LOG_NAME}: could not assign token uid`, self.currentTokenUid, err);
 	}
+}
+
+NFCReader.prototype.unassignToken = function () {
+	const self = this;
+
+	if (!self.currentTokenUid) {
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
+		return false;
+	}
+
+	const unassignedPlaylist = self.tokenManager.unassignToken(self.currentTokenUid);
+	if(unassignedPlaylist){
+		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
+	}
+
 }

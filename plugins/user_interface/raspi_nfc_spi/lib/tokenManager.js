@@ -45,7 +45,8 @@ class TokenManager {
             this.logger.info('token', uid, 'was not assigned')
             return null;
         } else {
-            return this.tokens.removeWhere({ uid });
+            this.tokens.removeWhere({ uid });
+            return assignment.data;
         }
     }
 
