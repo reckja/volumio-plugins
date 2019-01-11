@@ -1,4 +1,8 @@
 {
-  "pin":"Pin",
-  "action":"Action"
+  "ASSIGNMENT": "Assignment",
+  "ASSIGN_TAG": "Assign NFC token",
+  "ASSIGN_TAG_DESCRIPTION": "Bring an NFC-token in range of your reader. Then, play the playlist you want to assign - and push the button",
+  "UNASSIGNMENT": "Un-asssignment",
+  "UNASSIGN_TAG": "Un-assign NFC token",
+  "UNASSIGN_TAG_DESCRIPTION": "Bring an NFC-token in range of your reader. The current assignment will be shown. Then remove the assignment"
 }

@@ -16,7 +16,7 @@ class TokenManager {
                 this.metadata.insertOne({ id: 'version', value: DB_VERSION });
             }
         }
-        
+
         fs.ensureDirSync(dirName(filePath));
         this.db = new lokijs(filePath, {
             autoload: true,
@@ -52,6 +52,12 @@ class TokenManager {
         const assignment = this.tokens.findOne({ uid });
         return assignment && assignment.data
     }
+
+    getAllAssignments() {
+        return this.tokens.find()
+            .map((a) => { return { uid: a.uid, data: a.data } })
+    }
+
 }
 
 module.exports = TokenManager;

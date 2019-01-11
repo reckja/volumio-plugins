@@ -5,9 +5,8 @@ const fs = require('fs-extra');
 const io = require('socket.io-client');
 const socket = io.connect('http://localhost:3000');
 const MFRC522Daemon = require('./lib/mfrc522Daemon');
-const TokenManager = require('./lib/tokenManager');
+const getTokenManager = require('./lib/getTokenManager');
 
-const CONFIG_PATH = '/data/configuration/user_interface/raspi_nfc_spi/';
 const MY_LOG_NAME = 'RasPi NFC plugin';
 
 module.exports = NFCReader;
@@ -18,7 +17,7 @@ function NFCReader(context) {
 	self.commandRouter = self.context.coreCommand;
 	self.logger = self.context.logger;
 
-	self.tokenManager = new TokenManager(CONFIG_PATH + 'data/tokenmanager.db', self.logger);
+	self.tokenManager = getTokenManager(self.logger);
 
 	const handleCardDetected = function (uid) {
 		// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));

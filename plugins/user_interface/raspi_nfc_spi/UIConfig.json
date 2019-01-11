@@ -6,30 +6,40 @@
     {
       "id": "assign_tokens",
       "element": "section",
-      "label": "Bring an NFC-token in range of your reader. Then, play the playlist you want to assign - and push the button",
+      "label": "TRANSLATE.ASSIGNMENT",
       "icon": "fa-plug",
-      "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"saveCurrentPlaying"},
-      "saveButton": {
-        "label": "Assign tag",
-        "data": [
-
-        ]
-      },
-      "content": []
-    },
-    {
-      "id": "unassign_tokens",
-      "element": "section",
-      "label": "Bring an NFC-token in range of your reader. The current assignment will be shown. The remove the assignment",
-      "icon": "fa-plug",
-      "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"unassignToken"},
-      "saveButton": {
-        "label": "Assign tag",
-        "data": [
-
-        ]
-      },
-      "content": []
+      "content": [
+        {
+          "id": "assignToken",
+          "element": "button",
+          "label": "TRANSLATE.ASSIGN_TAG",
+          "doc": "TRANSLATE.ASSIGN_TAG_DESCRIPTION",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "user_interface/raspi_nfc_spi",
+              "method": "saveCurrentPlaying",
+              "data": ""
+            }
+          }
+        },
+        {
+          "id": "unassignToken",
+          "element": "button",
+          "label": "TRANSLATE.UNASSIGN_TAG",
+          "doc": "TRANSLATE.UNASSIGN_TAG_DESCRIPTION",
+          "onClick": {
+            "type": "emit",
+            "message": "callMethod",
+            "data": {
+              "endpoint": "user_interface/raspi_nfc_spi",
+              "method": "unassignToken",
+              "data": ""
+            }
+          }
+        }
+      ]
     }
   ]
 }
