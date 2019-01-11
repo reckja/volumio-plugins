@@ -1,6 +1,6 @@
 {
   "page": {
-    "label": "MFRC522 Configuration"
+    "label": "NFC Reader"
   },
   "sections": [
     {
@@ -38,6 +38,42 @@
               "data": ""
             }
           }
+        }
+      ]
+    },
+    {
+      "id": "nfc_reader_tech",
+      "element": "section",
+      "label": "TRANSLATE.NFC_READER_TECH",
+      "icon": "fa-microchip",
+      "content": [
+        {
+          "id": "spi",
+          "element": "select",
+          "label": "TRANSLATE.NFC_READER_SPI_CHANNEL",
+          "value": {
+            "value": 0,
+            "label": "0"
+          },
+          "options": [
+            {
+              "value": 0,
+              "label": "0"
+            },
+            {
+              "value": 1,
+              "label": "1"
+            }
+          ],
+          "doc": "TRANSLATE.NFC_READER_SPI_CHANNEL_DESCRIPTION"
+        },
+        {
+          "id": "poll_rate",
+          "element": "input",
+          "type": "number",
+          "label": "TRANSLATE.NFC_READER_POLL_RATE",
+          "doc": "NFC_READER_POLL_RATE_DESCRIPTION",
+          "value": 500
         }
       ]
     }
