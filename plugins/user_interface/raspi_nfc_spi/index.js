@@ -25,8 +25,11 @@ function NFCReader(context) {
 		self.currentTokenUid = uid;
 		self.logger.info('NFC card detected', self.currentTokenUid);
 		const playlist = self.tokenManager.readToken(self.currentTokenUid);
+		self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
 		if(playlist && playlist !== self.currentPlaylist){
-			socket.emit('playPlaylist', playlist);
+			socket.emit('playPlaylist', {
+				"name": playlist
+   			});
 		}
 	}
 
@@ -195,7 +198,7 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 	
 	try {
 		self.currentTokenUid && self.currentPlaylist 
-		&& self.tokenManager.registerToken(self.currentTokenUid, self.currentPlaylist );
+		&& self.tokenManager.assignToken(self.currentTokenUid, self.currentPlaylist );
 	} catch (err) {
 		self.logger.info(`${MY_LOG_NAME}: could not assign token uid`, self.currentTokenUid, err);
 	}
