@@ -4,6 +4,11 @@ const mfrc522 = require('mfrc522-rpi');
 
 const DEBOUNCE_THRESHOLD = 5; // max disconnects before it is considered disconnected
 
+const serializeUid = function (uid) {
+	return uid && uid[0]
+		? `${uid[0].toString(16)}-${uid[1].toString(16)}-${uid[2].toString(16)}-${uid[3].toString(16)}`
+		: JSON.stringify(uid);
+}
 class MFRC522Daemon {
     constructor(spiChannel, onCardDetected, onCardRemoved, logger = console, interval = 500) {
         mfrc522.initWiringPi(spiChannel);
@@ -33,9 +38,9 @@ class MFRC522Daemon {
                     }
                 }
             } else {
-                const uid = mfrc522.getUid().data;
+                const uid = serializeUid(mfrc522.getUid().data);
                 //self.logger.info('UID', JSON.stringify(uid));
-                if (!self.currentUID || self.currentUID.toString() !== uid.toString()) {
+                if (!self.currentUID || self.currentUID !== uid) {
                     self.currentUID = uid;
                     self.debounceCounter = 0;
                     onCardDetected(self.currentUID);

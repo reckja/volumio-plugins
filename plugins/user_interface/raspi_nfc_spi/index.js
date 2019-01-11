@@ -12,22 +12,18 @@ const MY_LOG_NAME = 'RasPi NFC plugin';
 
 module.exports = NFCReader;
 
-const serializeUid = function (uid) {
-	return uid && uid[0]
-		? uid[0].toString(16) + uid[1].toString(16) + uid[2].toString(16) + uid[3].toString(16)
-		: JSON.stringify(uid);
-}
-
 function NFCReader(context) {
 	const self = this;
 	self.context = context;
 	self.commandRouter = self.context.coreCommand;
 	self.logger = self.context.logger;
 
+	self.tokenManager = new TokenManager(CONFIG_PATH + 'data/tokenmanager.db', self.logger);
+
 	const handleCardDetected = function (uid) {
 		// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
-		self.currentTokenUid = uid;
-		self.logger.info('NFC card detected', serializeUid(uid));
+		self.currentTokenUid = serializeUid(uid);
+		self.logger.info('NFC card detected', self.currentTokenUid);
 	}
 
 	const handleCardRemoved = function (uid) {
@@ -38,8 +34,6 @@ function NFCReader(context) {
 
 	const spiChannel = 0; //TODO: configure SPI channel
 	self.nfcDaemon = new MFRC522Daemon(spiChannel, handleCardDetected, handleCardRemoved, self.logger);
-
-	self.tokenManager = new TokenManager(CONFIG_PATH + 'tokenmanager.db', self.logger);
 }
 
 NFCReader.prototype.onVolumioStart = function () {
