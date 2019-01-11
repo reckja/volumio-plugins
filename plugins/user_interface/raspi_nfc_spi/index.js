@@ -188,12 +188,12 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 	const self = this;
 
 	if (!self.currentTokenUid) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("ERROR_NO_TOKEN"));
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
 		return false;
 	}
 
 	if (!self.currentPlaylist) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("ERROR_NO_PLAYLIST"));
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "Start the playlist which shall be assigned");
 		return false;
 	}
 
@@ -204,7 +204,7 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 			&& self.tokenManager.assignToken(self.currentTokenUid, self.currentPlaylist)) {
 
 			// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
-			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, self.commandRouter.getI18nString("SUCCESS_ASSIGNMENT_TO"), self.currentPlaylist);
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
 			return true;
 		};
 	} catch (err) {
@@ -216,7 +216,7 @@ NFCReader.prototype.unassignToken = function () {
 	const self = this;
 
 	if (!self.currentTokenUid) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("ERROR_NO_TOKEN"));
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
 		return false;
 	}
 
