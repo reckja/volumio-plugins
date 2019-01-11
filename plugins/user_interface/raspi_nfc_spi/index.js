@@ -138,10 +138,8 @@ NFCReader.prototype.getUIConfig = function () {
 
 	self.logger.info(MY_LOG_NAME, 'Getting UI config');
 
-	//Just for now..
-	const lang_code = 'en';
-
-	//const lang_code = this.commandRouter.sharedconsts.get('language_code');
+	
+	const lang_code = this.commandRouter.sharedconsts.get('language_code');
 
 	self.commandRouter.i18nJson(__dirname + '/i18n/strings_' + lang_code + '.json',
 		__dirname + '/i18n/strings_en.json',
@@ -197,12 +195,12 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 	const self = this;
 
 	if (!self.currentTokenUid) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "TRANSLATE.ERROR_NO_TOKEN");
 		return false;
 	}
 
 	if (!self.currentPlaylist) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "Start the playlist which shall be assigned");
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "TRANSLATE.ERROR_NO_PLAYLIST");
 		return false;
 	}
 
@@ -212,7 +210,8 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 		if (self.currentTokenUid && self.currentPlaylist
 			&& self.tokenManager.assignToken(self.currentTokenUid, self.currentPlaylist)) {
 
-			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
+			// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "TRANSLATE.SUCCESS_ASSIGNMENT_TO", self.currentPlaylist);
 			return true;
 		};
 	} catch (err) {
@@ -224,12 +223,13 @@ NFCReader.prototype.unassignToken = function () {
 	const self = this;
 
 	if (!self.currentTokenUid) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "TRANSLATE.ERROR_NO_TOKEN");
 		return false;
 	}
 
 	const unassignedPlaylist = self.tokenManager.unassignToken(self.currentTokenUid);
 	if (unassignedPlaylist) {
+		// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
 		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
 	}
 

@@ -4,15 +4,15 @@
   },
   "sections": [
     {
-      "id": "assign_tokens",
+      "id": "token_management",
       "element": "section",
-      "label": "TRANSLATE.ASSIGNMENT",
+      "label": "TRANSLATE.TOKEN_MANAGEMENT",
       "icon": "fa-plug",
       "content": [
         {
           "id": "assignToken",
           "element": "button",
-          "label": "TRANSLATE.ASSIGN_TAG",
+          "label": "TRANSLATE.ASSIGN",
           "doc": "TRANSLATE.ASSIGN_TAG_DESCRIPTION",
           "onClick": {
             "type": "emit",
@@ -27,7 +27,7 @@
         {
           "id": "unassignToken",
           "element": "button",
-          "label": "TRANSLATE.UNASSIGN_TAG",
+          "label": "TRANSLATE.UNASSIGN",
           "doc": "TRANSLATE.UNASSIGN_TAG_DESCRIPTION",
           "onClick": {
             "type": "emit",

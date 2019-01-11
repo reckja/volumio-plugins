@@ -1,8 +1,12 @@
 {
-  "ASSIGNMENT": "Assignment",
-  "ASSIGN_TAG": "Assign NFC token",
+  "ASSIGN": "Assign",
+  "ASSIGN_TAG": "Assign last seen NFC token",
   "ASSIGN_TAG_DESCRIPTION": "Bring an NFC-token in range of your reader. Then, play the playlist you want to assign - and push the button",
-  "UNASSIGNMENT": "Un-asssignment",
-  "UNASSIGN_TAG": "Un-assign NFC token",
+  "ERROR_NO_TOKEN": "No NFC token detected", 
+  "ERROR_NO_PLAYLIST": "Start the playlist which shall be assigned", 
+  "SUCCESS_ASSIGNMENT_TO": "NFC Token has been assigned to",
+  "TOKEN_MANAGEMENT": "NFC Token management",
+  "UNASSIGN": "Un-asssign",
+  "UNASSIGN_TAG": "Un-assign last seen NFC token",
   "UNASSIGN_TAG_DESCRIPTION": "Bring an NFC-token in range of your reader. The current assignment will be shown. Then remove the assignment"
 }
