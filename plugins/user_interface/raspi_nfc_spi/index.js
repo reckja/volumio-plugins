@@ -25,8 +25,14 @@ function NFCReader(context) {
 		self.currentTokenUid = uid;
 		self.logger.info('NFC card detected', self.currentTokenUid);
 		const playlist = self.tokenManager.readToken(self.currentTokenUid);
+
+		self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
+		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
+
 		if (playlist && playlist !== self.currentPlaylist) {
-			socket.emit('playPlaylist', playlist);
+			socket.emit('playPlaylist', {
+				"name": playlist
+			});
 		}
 	}
 
@@ -205,8 +211,8 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 
 	try {
 		if (self.currentTokenUid && self.currentPlaylist
-			&& self.tokenManager.registerToken(self.currentTokenUid, self.currentPlaylist)) {
-			
+			&& self.tokenManager.assignToken(self.currentTokenUid, self.currentPlaylist)) {
+
 			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
 			return true;
 		};
@@ -224,7 +230,7 @@ NFCReader.prototype.unassignToken = function () {
 	}
 
 	const unassignedPlaylist = self.tokenManager.unassignToken(self.currentTokenUid);
-	if(unassignedPlaylist){
+	if (unassignedPlaylist) {
 		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
 	}
 
