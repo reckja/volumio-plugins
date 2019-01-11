@@ -2,6 +2,8 @@ const lokijs = require('lokijs');
 const dirName = require('path').dirname;
 const fs = require('fs-extra');
 
+const serializeUid = require('./serializeUid');
+
 const DB_VERSION = 1;
 class TokenManager {
 
@@ -48,7 +50,7 @@ class TokenManager {
     }
 
     readToken(uid) {
-        const assignment = this.tokens.findOne({ uid });
+        const assignment = this.tokens.findOne({ uid: serializeUid(uid) });
         return assignment && assignment.data
     }
 }

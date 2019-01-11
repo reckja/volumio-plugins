@@ -1,14 +1,10 @@
 'use strict';
 
 const mfrc522 = require('mfrc522-rpi');
+const serializeUid = require('./serializeUid');
 
 const DEBOUNCE_THRESHOLD = 5; // max disconnects before it is considered disconnected
 
-const serializeUid = function (uid) {
-	return uid && uid[0]
-		? `${uid[0].toString(16)}-${uid[1].toString(16)}-${uid[2].toString(16)}-${uid[3].toString(16)}`
-		: JSON.stringify(uid);
-}
 class MFRC522Daemon {
     constructor(spiChannel, onCardDetected, onCardRemoved, logger = console, interval = 500) {
         mfrc522.initWiringPi(spiChannel);
