@@ -48,9 +48,9 @@ function NFCReader(context) {
 NFCReader.prototype.onVolumioStart = function () {
 	const self = this;
 
-	const configFile = this.commandRouter.pluginManager.getConfigurationFile(this.context, 'config.json');
-	this.config = new (require('v-conf'))();
-	this.config.loadFile(configFile);
+	const configFile = self.commandRouter.pluginManager.getConfigurationFile(self.context, 'config.json');
+	self.config = new (require('v-conf'))();
+	self.config.loadFile(configFile);
 
 	self.logger.info("NFCReader initialized");
 
@@ -138,7 +138,7 @@ NFCReader.prototype.getUIConfig = function () {
 
 	self.logger.info(MY_LOG_NAME, 'Getting UI config');
 
-	const lang_code = this.commandRouter.sharedVars.get('language_code');
+	const lang_code = self.commandRouter.sharedVars.get('language_code');
 
 	self.commandRouter.i18nJson(__dirname + '/i18n/strings_' + lang_code + '.json',
 		__dirname + '/i18n/strings_en.json',
@@ -156,11 +156,6 @@ NFCReader.prototype.getUIConfig = function () {
 
 NFCReader.prototype.saveConfig = function (data) {
 	const self = this;
-
-	self.unRegisterWatchDaemon()
-		.then(self.registerWatchDaemon());
-
-	// TODO: Create a new assignment
 	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "Configuration saved");
 };
 
@@ -193,12 +188,12 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 	const self = this;
 
 	if (!self.currentTokenUid) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("TRANSLATE.ERROR_NO_TOKEN"));
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("ERROR_NO_TOKEN"));
 		return false;
 	}
 
 	if (!self.currentPlaylist) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("TRANSLATE.ERROR_NO_PLAYLIST"));
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("ERROR_NO_PLAYLIST"));
 		return false;
 	}
 
@@ -209,7 +204,7 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 			&& self.tokenManager.assignToken(self.currentTokenUid, self.currentPlaylist)) {
 
 			// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
-			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, self.commandRouter.getI18nString("TRANSLATE.SUCCESS_ASSIGNMENT_TO"), self.currentPlaylist);
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, self.commandRouter.getI18nString("SUCCESS_ASSIGNMENT_TO"), self.currentPlaylist);
 			return true;
 		};
 	} catch (err) {
@@ -221,7 +216,7 @@ NFCReader.prototype.unassignToken = function () {
 	const self = this;
 
 	if (!self.currentTokenUid) {
-		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("TRANSLATE.ERROR_NO_TOKEN"));
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, self.commandRouter.getI18nString("ERROR_NO_TOKEN"));
 		return false;
 	}
 
