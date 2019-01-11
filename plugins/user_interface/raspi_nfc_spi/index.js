@@ -69,7 +69,7 @@ NFCReader.prototype.onStart = function () {
 	// register callback to sniff which playlist is currently playing
 	socket.on('playPlaylist', function (data) {
 		self.currentPlaylist = data.name;
-		self.logger.info('Currently playing playlist', currentPlaylist)
+		self.logger.info('Currently playing playlist', self.currentPlaylist)
 	});
 
 	self.registerWatchDaemon()
