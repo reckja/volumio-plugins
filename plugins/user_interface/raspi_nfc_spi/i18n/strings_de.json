@@ -1,7 +1,7 @@
 {
   "ASSIGN": "Zuordnen",
   "ASSIGN_TAG": "Zuletzt gelesenen Tag zuordnen",
-  "ASSIGN_TAG_DESCRIPTION": "Bring ein NFC-Token in die Nähe Deines Lesegeräts. Spiel die Wiedergabeliste ab, die Du zuordnen möchtest - und drück' den Knopf!",
+  "ASSIGN_TAG_DOC": "Bring ein NFC-Token in die Nähe Deines Lesegeräts. Spiel die Wiedergabeliste ab, die Du zuordnen möchtest - und drück' den Knopf!",
   "ERROR_NO_TOKEN": "Es wurde kein NFC-Token erkannt", 
   "ERROR_NO_PLAYLIST": "Starte eine Wiedergabeliste, bevor Du hier drauf drückst", 
   "NFC_READER_TECH": "Technische Einstellungen des NFC readers",
@@ -13,5 +13,5 @@
   "TOKEN_MANAGEMENT": "NFC-Token Verwaltung",
   "UNASSIGN": "Entfernen",
   "UNASSIGN_TAG": "Zuletzt gelesenen Tag entfernen",
-  "UNASSIGN_TAG_DESCRIPTION": "Bring ein NFC-Token in die Nähe Deines Lesegeräts. Wenn Du den Knopf drückst, wird das System die Zuordnung der PLayliste zu dem Token vergessen."
+  "UNASSIGN_TAG_DOC": "Bring ein NFC-Token in die Nähe Deines Lesegeräts. Wenn Du den Knopf drückst, wird das System die Zuordnung der PLayliste zu dem Token vergessen."
 }

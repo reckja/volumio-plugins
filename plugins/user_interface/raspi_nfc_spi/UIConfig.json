@@ -13,7 +13,8 @@
           "id": "assignToken",
           "element": "button",
           "label": "TRANSLATE.ASSIGN",
-          "doc": "TRANSLATE.ASSIGN_TAG_DESCRIPTION",
+          "description": "TRANSLATE.ASSIGN_TAG",
+          "doc": "TRANSLATE.ASSIGN_TAG_DOC",
           "onClick": {
             "type": "emit",
             "message": "callMethod",
@@ -28,7 +29,8 @@
           "id": "unassignToken",
           "element": "button",
           "label": "TRANSLATE.UNASSIGN",
-          "doc": "TRANSLATE.UNASSIGN_TAG_DESCRIPTION",
+          "description": "TRANSLATE.UNASSIGN_TAG",
+          "doc": "TRANSLATE.UNASSIGN_TAG_DOC",
           "onClick": {
             "type": "emit",
             "message": "callMethod",

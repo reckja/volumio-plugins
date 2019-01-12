@@ -74,14 +74,6 @@ NFCReader.prototype.onStart = function () {
 		self.logger.info('Currently playing playlist', self.currentPlaylist)
 	});
 
-	const spiChannel = self.config.get('spi');
-	const pollingRate = self.config.get('pollingRate');
-
-	self.logger.info(MY_LOG_NAME, 'SPI channel', spiChannel)
-	self.logger.info(MY_LOG_NAME, 'polling rate', pollingRate)
-
-	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected, self.handleCardRemoved, self.logger, pollingRate);
-
 	self.registerWatchDaemon()
 		.then(function (result) {
 			self.logger.info("NFCReader started");
@@ -101,7 +93,7 @@ NFCReader.prototype.onStop = function () {
 			self.logger.info("NFCReader stopped");
 			defer.resolve();
 		});
-	
+
 	socket.removeAllListeners();
 
 	return defer.promise;
@@ -110,6 +102,9 @@ NFCReader.prototype.onStop = function () {
 
 NFCReader.prototype.onRestart = function () {
 	const self = this;
+
+	self.unRegisterWatchDaemon()
+		.then(() => self.registerWatchDaemon());
 };
 
 NFCReader.prototype.onInstall = function () {
@@ -171,6 +166,8 @@ NFCReader.prototype.getUIConfig = function () {
 NFCReader.prototype.saveConfig = function (data) {
 	var self = this;
 
+	self.logger.info(MY_LOG_NAME, 'Saving config', data);
+
 	self.config.set('spi', data.spi);
 	self.config.set('pollingRate', data.pollingRate);
 
@@ -208,6 +205,23 @@ NFCReader.prototype.registerWatchDaemon = function () {
 	const self = this;
 
 	self.logger.info(`${MY_LOG_NAME} Registering a thread to poll the NFC reader`);
+
+	let spiChannel = self.config.get('spi');
+	if (!spiChannel) {
+		self.config.set('spi', 0);
+		spiChannel = 0;
+	}
+
+	let pollingRate = self.config.get('pollingRate');
+	if (!pollingRate) {
+		self.config.set('pollingRate', 0);
+		pollingRate = 500;
+	}
+
+	self.logger.info(MY_LOG_NAME, 'SPI channel', spiChannel)
+	self.logger.info(MY_LOG_NAME, 'polling rate', pollingRate)
+
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected, self.handleCardRemoved, self.logger, pollingRate);
 
 	self.nfcDaemon.start();
 	return libQ.resolve();
