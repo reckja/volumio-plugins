@@ -18,32 +18,6 @@ function NFCReader(context) {
 	self.logger = self.context.logger;
 
 	self.tokenManager = getTokenManager(self.logger);
-
-
-	const handleCardDetected = function (uid) {
-		// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
-		self.currentTokenUid = uid;
-		self.logger.info('NFC card detected', self.currentTokenUid);
-		const playlist = self.tokenManager.readToken(self.currentTokenUid);
-
-		self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
-		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
-
-		if (playlist && playlist !== self.currentPlaylist) {
-			socket.emit('playPlaylist', {
-				"name": playlist
-			});
-		}
-	}
-
-	const handleCardRemoved = function (uid) {
-		// self.commandRouter.pushToastMessage('success', 'NFC card removed', serializeUid(uid));
-		self.currentTokenUid = null;
-		self.logger.info('NFC card removed', uid);
-	}
-
-	const spiChannel = 0; //TODO: configure SPI channel
-	// self.nfcDaemon = new MFRC522Daemon(spiChannel, handleCardDetected, handleCardRemoved, self.logger);
 }
 
 NFCReader.prototype.onVolumioStart = function () {
