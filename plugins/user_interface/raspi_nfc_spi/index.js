@@ -178,10 +178,13 @@ NFCReader.prototype.saveConfiguration = function (data) {
 
 	self.logger.info(MY_LOG_NAME, 'Saving config', JSON.stringify(data));
 
-	self.config.set('spi', data.spi);
+	self.config.set('spi', data.spi.value);
 	self.config.set('pollingRate', data.pollingRate);
 
 	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "Configuration saved");
+
+	self.unRegisterWatchDaemon()
+		.then(() => self.registerWatchDaemon());
 };
 
 NFCReader.prototype.handleCardDetected = function (uid) {
