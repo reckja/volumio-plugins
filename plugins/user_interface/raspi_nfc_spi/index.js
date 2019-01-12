@@ -74,6 +74,16 @@ NFCReader.prototype.onStart = function () {
 		self.logger.info('Currently playing playlist', self.currentPlaylist)
 	});
 
+
+	// Configuration default values
+	if (!self.config.get('spi')) {
+		self.config.set('spi', 0);
+	}
+
+	if (!self.config.get('pollingRate')) {
+		self.config.set('pollingRate', 500);
+	}
+
 	self.registerWatchDaemon()
 		.then(function (result) {
 			self.logger.info("NFCReader started");
@@ -206,17 +216,8 @@ NFCReader.prototype.registerWatchDaemon = function () {
 
 	self.logger.info(`${MY_LOG_NAME} Registering a thread to poll the NFC reader`);
 
-	let spiChannel = self.config.get('spi');
-	if (!spiChannel) {
-		self.config.set('spi', 0);
-		spiChannel = 0;
-	}
-
-	let pollingRate = self.config.get('pollingRate');
-	if (!pollingRate) {
-		self.config.set('pollingRate', 0);
-		pollingRate = 500;
-	}
+	const spiChannel = self.config.get('spi');
+	const pollingRate = self.config.get('pollingRate');
 
 	self.logger.info(MY_LOG_NAME, 'SPI channel', spiChannel)
 	self.logger.info(MY_LOG_NAME, 'polling rate', pollingRate)

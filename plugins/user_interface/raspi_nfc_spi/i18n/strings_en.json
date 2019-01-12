@@ -9,6 +9,7 @@
   "NFC_READER_SPI_CHANNEL_DESCRIPTION": "The technical number of the SPI device your reader is connected to.",
   "NFC_READER_POLL_RATE": "Polling rate",
   "NFC_READER_POLL_RATE_DESCRIPTION": "The interval in which the reader is going to be checked for changes",
+  "SAVE": "Save",
   "SUCCESS_ASSIGNMENT_TO": "NFC Token has been assigned to",
   "TOKEN_MANAGEMENT": "NFC Token management",
   "UNASSIGN": "Un-asssign",

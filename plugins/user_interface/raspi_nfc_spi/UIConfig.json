@@ -48,14 +48,18 @@
       "element": "section",
       "label": "TRANSLATE.NFC_READER_TECH",
       "icon": "fa-microchip",
-      "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"saveConfig"},
-                 "saveButton": {
-                 "label": "TRANSLATE.SAVE",
-                 "data": [
-                          "spi",
-                          "pollingRate"
-                          ]
-                 },
+      "onSave": {
+        "type": "plugin",
+        "endpoint": "user_interface/raspi_nfc_spi",
+        "method": "saveConfig"
+      },
+      "saveButton": {
+        "label": "TRANSLATE.SAVE",
+        "data": [
+          "spi",
+          "pollingRate"
+        ]
+      },
       "content": [
         {
           "id": "spi",
