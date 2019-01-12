@@ -223,7 +223,7 @@ NFCReader.prototype.registerWatchDaemon = function () {
 	self.logger.info(MY_LOG_NAME, 'SPI channel', spiChannel)
 	self.logger.info(MY_LOG_NAME, 'polling rate', pollingRate)
 
-	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected, self.handleCardRemoved, self.logger, pollingRate);
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected.bind(this), self.handleCardRemoved.bind(this), self.logger, pollingRate);
 
 	self.nfcDaemon.start();
 	return libQ.resolve();
