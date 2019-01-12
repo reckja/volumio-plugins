@@ -18,31 +18,6 @@ function NFCReader(context) {
 	self.logger = self.context.logger;
 
 	self.tokenManager = getTokenManager(self.logger);
-
-	const handleCardDetected = function (uid) {
-		// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
-		self.currentTokenUid = uid;
-		self.logger.info('NFC card detected', self.currentTokenUid);
-		const playlist = self.tokenManager.readToken(self.currentTokenUid);
-
-		self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
-		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
-
-		if (playlist && playlist !== self.currentPlaylist) {
-			socket.emit('playPlaylist', {
-				"name": playlist
-			});
-		}
-	}
-
-	const handleCardRemoved = function (uid) {
-		// self.commandRouter.pushToastMessage('success', 'NFC card removed', serializeUid(uid));
-		self.currentTokenUid = null;
-		self.logger.info('NFC card removed', uid);
-	}
-
-	const spiChannel = 0; //TODO: configure SPI channel
-	self.nfcDaemon = new MFRC522Daemon(spiChannel, handleCardDetected, handleCardRemoved, self.logger);
 }
 
 NFCReader.prototype.onVolumioStart = function () {
@@ -60,8 +35,6 @@ NFCReader.prototype.onVolumioStart = function () {
 
 NFCReader.prototype.getConfigurationFiles = function () {
 	return ['config.json'];
-
-	// TODO: Can we also read persisted assignments of tags to playlists here?
 };
 
 
@@ -74,7 +47,7 @@ NFCReader.prototype.onStart = function () {
 		self.currentPlaylist = playlist;
 		self.logger.info('Currently playing playlist', self.currentPlaylist)
 	});
-
+	
 	self.registerWatchDaemon()
 		.then(function (result) {
 			self.logger.info("NFCReader started");
@@ -94,6 +67,8 @@ NFCReader.prototype.onStop = function () {
 			self.logger.info("NFCReader stopped");
 			defer.resolve();
 		});
+	
+	socket.removeAllListeners();
 
 	return defer.promise;
 };
@@ -144,6 +119,11 @@ NFCReader.prototype.getUIConfig = function () {
 		__dirname + '/i18n/strings_en.json',
 		__dirname + '/UIConfig.json')
 		.then(function (uiconf) {
+			uiconf.sections[1].content[0].value = self.config.get('spi');
+			uiconf.sections[1].content[1].value = self.config.get('pollingRate');
+
+			// TODO: Can we also read persisted assignments of tags to playlists here?
+
 			defer.resolve(uiconf);
 		})
 		.fail(function () {
@@ -155,23 +135,50 @@ NFCReader.prototype.getUIConfig = function () {
 
 
 NFCReader.prototype.saveConfig = function (data) {
-	const self = this;
+	var self = this;
+
+	self.config.set('spi', data.spi);
+	self.config.set('pollingRate', data.pollingRate);
+
+	self.onRestart
+
 	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "Configuration saved");
 };
 
+NFCReader.prototype.handleCardDetected = function (uid) {
+	const self = this;
+
+	// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
+	self.currentTokenUid = uid;
+	self.logger.info('NFC card detected', self.currentTokenUid);
+	const playlist = self.tokenManager.readToken(self.currentTokenUid);
+
+	self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
+	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
+
+	if (playlist && playlist !== self.currentPlaylist) {
+		socket.emit('playPlaylist', {
+			"name": playlist
+		});
+	}
+}
+
+NFCReader.prototype.handleCardRemoved = function (uid) {
+	const self = this;
+	// self.commandRouter.pushToastMessage('success', 'NFC card removed', serializeUid(uid));
+	self.currentTokenUid = null;
+	self.logger.info('NFC card removed', uid);
+}
 
 NFCReader.prototype.registerWatchDaemon = function () {
 	const self = this;
 
+	const spiChannel = self.config.get('spi');
+	const pollingRate = self.config.get('pollingRate');
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected, self.handleCardRemoved, self.logger, pollingRate);
+
 	self.logger.info(`${MY_LOG_NAME} Registering a thread to poll the NFC reader`);
-	/* 
-	TODO: Mifare RC522 is connected to the SPI bus. As far as I've seen, 
-	there's no option to implement an interrupt-mechanism there, but only 
-	a polling is possible => we'll read (poll) the bus and write the result 
-	into a file. To this file handler, we'll attach a callback triggering 
-	the actual logic
-	*/
-	const spiChannel = 0; //TODO: configure SPI channel
+
 	self.nfcDaemon.start();
 	return libQ.resolve();
 };
@@ -225,5 +232,4 @@ NFCReader.prototype.unassignToken = function () {
 		// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
 		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
 	}
-
 }

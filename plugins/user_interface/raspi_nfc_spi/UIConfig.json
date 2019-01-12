@@ -46,6 +46,14 @@
       "element": "section",
       "label": "TRANSLATE.NFC_READER_TECH",
       "icon": "fa-microchip",
+      "onSave": {"type":"controller", "endpoint":"user_interface/raspi_nfc_spi", "method":"saveConfig"},
+                 "saveButton": {
+                 "label": "TRANSLATE.SAVE",
+                 "data": [
+                          "spi",
+                          "pollingRate"
+                          ]
+                 },
       "content": [
         {
           "id": "spi",
@@ -68,7 +76,7 @@
           "doc": "TRANSLATE.NFC_READER_SPI_CHANNEL_DESCRIPTION"
         },
         {
-          "id": "poll_rate",
+          "id": "pollingRate",
           "element": "input",
           "type": "number",
           "label": "TRANSLATE.NFC_READER_POLL_RATE",

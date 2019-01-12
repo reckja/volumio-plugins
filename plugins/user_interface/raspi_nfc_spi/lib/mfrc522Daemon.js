@@ -5,6 +5,13 @@ const serializeUid = require('./serializeUid');
 
 const DEBOUNCE_THRESHOLD = 5; // max disconnects before it is considered disconnected
 
+/* 
+	TODO: Mifare RC522 is connected to the SPI bus. As far as I've seen, 
+	there's no option to implement an interrupt-mechanism there, but only 
+	a polling is possible => we'll read (poll) the bus and write the result 
+	into a file. To this file handler, we'll attach a callback triggering 
+	the actual logic
+	*/
 class MFRC522Daemon {
     constructor(spiChannel, onCardDetected, onCardRemoved, logger = console, interval = 500) {
         mfrc522.initWiringPi(spiChannel);
