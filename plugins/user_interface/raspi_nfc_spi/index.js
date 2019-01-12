@@ -173,15 +173,13 @@ NFCReader.prototype.getUIConfig = function () {
 };
 
 
-NFCReader.prototype.saveConfig = function (data) {
-	var self = this;
+NFCReader.prototype.saveConfiguration = function (data) {
+	const self = this;
 
-	self.logger.info(MY_LOG_NAME, 'Saving config', data);
+	self.logger.info(MY_LOG_NAME, 'Saving config', JSON.stringify(data));
 
 	self.config.set('spi', data.spi);
 	self.config.set('pollingRate', data.pollingRate);
-
-	self.onRestart
 
 	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "Configuration saved");
 };

@@ -49,9 +49,9 @@
       "label": "TRANSLATE.NFC_READER_TECH",
       "icon": "fa-microchip",
       "onSave": {
-        "type": "plugin",
+        "type": "controller",
         "endpoint": "user_interface/raspi_nfc_spi",
-        "method": "saveConfig"
+        "method": "saveConfiguration"
       },
       "saveButton": {
         "label": "TRANSLATE.SAVE",
