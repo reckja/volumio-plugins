@@ -57,7 +57,8 @@
         "label": "TRANSLATE.SAVE",
         "data": [
           "spi",
-          "pollingRate"
+          "pollingRate", 
+          "debounceThreshold"
         ]
       },
       "content": [

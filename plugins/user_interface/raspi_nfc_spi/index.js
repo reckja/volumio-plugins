@@ -134,6 +134,7 @@ NFCReader.prototype.getUIConfig = function () {
 		.then(function (uiconf) {
 			uiconf.sections[1].content[0].value.value = self.config.get('spi');
 			uiconf.sections[1].content[1].value = self.config.get('pollingRate');
+			uiconf.sections[1].content[2].value = self.config.get('debounceThreshold');
 
 			// TODO: Can we also read persisted assignments of tags to playlists here?
 
@@ -154,6 +155,7 @@ NFCReader.prototype.saveConfiguration = function (data) {
 
 	self.config.set('spi', data.spi.value);
 	self.config.set('pollingRate', data.pollingRate);
+	self.config.set('debounceThreshold', data.debounceThreshold);
 
 	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "Configuration saved");
 
