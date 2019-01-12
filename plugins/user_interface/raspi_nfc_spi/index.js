@@ -139,14 +139,14 @@ NFCReader.prototype.getUIConfig = function () {
 			uiconf.sections[1].content[1].value = self.config.get('pollingRate');
 			uiconf.sections[1].content[2].value = self.config.get('debounceThreshold');
 
-			// TODO: Can we also read persisted assignments of tags to playlists here?
-			self.tokenManager.getAllAssigments().map((assignment) => {
+			self.tokenManager.getAllAssignments().map((assignment) => {
+				self.logger.info('Found assignment', JSON.stringify(assignment));
+				
 				uiconf.sections[2].content.push(
 					{
 						"id": `unassign_${assignment.uid}`,
 						"element": "button",
 						"label": `${assignment.data}`,
-						"description": "TRANSLATE.UNASSIGN",
 						"onClick": {
 							"type": "emit",
 							"message": "callMethod",
@@ -157,6 +157,7 @@ NFCReader.prototype.getUIConfig = function () {
 							}
 						}
 					});
+				
 			})
 			defer.resolve(uiconf);
 		})
