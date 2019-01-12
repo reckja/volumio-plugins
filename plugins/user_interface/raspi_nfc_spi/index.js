@@ -48,7 +48,6 @@ NFCReader.prototype.onStart = function () {
 		self.logger.info('Currently playing playlist', self.currentPlaylist)
 	});
 
-
 	// Configuration default values
 	if (!self.config.get('spi')) {
 		self.config.set('spi', 0);
@@ -58,8 +57,12 @@ NFCReader.prototype.onStart = function () {
 		self.config.set('pollingRate', 500);
 	}
 
+	if (!self.config.get('debounceThreshold')) {
+		self.config.set('debounceThreshold', 1);
+	}
+
 	self.registerWatchDaemon()
-		.then(function (result) {
+		.then(function () {
 			self.logger.info("NFCReader started");
 			defer.resolve();
 		});
@@ -73,7 +76,7 @@ NFCReader.prototype.onStop = function () {
 	const defer = libQ.defer();
 
 	self.unRegisterWatchDaemon()
-		.then(function (result) {
+		.then(function () {
 			self.logger.info("NFCReader stopped");
 			defer.resolve();
 		});
@@ -137,7 +140,24 @@ NFCReader.prototype.getUIConfig = function () {
 			uiconf.sections[1].content[2].value = self.config.get('debounceThreshold');
 
 			// TODO: Can we also read persisted assignments of tags to playlists here?
-
+			self.tokenManager.getAllAssigments().map((assignment) => {
+				uiconf.sections[2].content.push(
+					{
+						"id": `unassign_${assignment.uid}`,
+						"element": "button",
+						"label": `${assignment.data}`,
+						"description": "TRANSLATE.UNASSIGN",
+						"onClick": {
+							"type": "emit",
+							"message": "callMethod",
+							"data": {
+								"endpoint": "user_interface/raspi_nfc_spi",
+								"method": "unassignToken",
+								"data": assignment.uid
+							}
+						}
+					});
+			})
 			defer.resolve(uiconf);
 		})
 		.fail(function () {
@@ -243,17 +263,25 @@ NFCReader.prototype.saveCurrentPlaying = function () {
 	}
 }
 
-NFCReader.prototype.unassignToken = function () {
+/**
+ * Removes the assigment of a token to a playlist.
+ * It can either operate based on the currently playing token 
+ * or alternatively be passed a uid.
+ */
+NFCReader.prototype.unassignToken = function (data = null) {
 	const self = this;
+	const tokenUid = data || self.currentTokenUid;
 
-	if (!self.currentTokenUid) {
+	self.logger.info(MY_LOG_NAME, 'shall unassign token', tokenUid);
+
+	if (!tokenUid) {
 		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
 		return false;
 	}
 
-	const unassignedPlaylist = self.tokenManager.unassignToken(self.currentTokenUid);
+	const unassignedPlaylist = self.tokenManager.unassignToken(tokenUid);
 	if (unassignedPlaylist) {
 		// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
-		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} unassigned (was ${unassignedPlaylist})`);
+		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${tokenUid} unassigned (was ${unassignedPlaylist})`);
 	}
 }

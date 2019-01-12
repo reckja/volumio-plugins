@@ -99,6 +99,13 @@
           "value": 4
         }
       ]
+    },
+    {
+      "id": "assigned_tokens",
+      "element": "section",
+      "label": "TRANSLATE.TOKEN_MANAGEMENT",
+      "icon": "fa-plug",
+      "content": []
     }
   ]
 }
