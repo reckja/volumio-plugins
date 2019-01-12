@@ -193,11 +193,12 @@ NFCReader.prototype.registerWatchDaemon = function () {
 
 	const spiChannel = self.config.get('spi');
 	const pollingRate = self.config.get('pollingRate');
+	const debounceThreshold = self.config.get('debounceThreshold');
 
 	self.logger.info(MY_LOG_NAME, 'SPI channel', spiChannel)
 	self.logger.info(MY_LOG_NAME, 'polling rate', pollingRate)
 
-	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected.bind(this), self.handleCardRemoved.bind(this), self.logger, pollingRate);
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected.bind(this), self.handleCardRemoved.bind(this), self.logger, pollingRate, debounceThreshold);
 
 	self.nfcDaemon.start();
 	return libQ.resolve();
