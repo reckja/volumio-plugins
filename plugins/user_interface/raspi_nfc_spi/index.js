@@ -44,8 +44,8 @@ NFCReader.prototype.onStart = function () {
 
 	// register callback to sniff which playlist is currently playing
 	socket.on('playingPlaylist', function (playlist) {
-		self.currentPlaylist = playlist;
-		self.logger.info('Currently playing playlist', self.currentPlaylist)
+		effectivePlaylist = playlist;
+		self.logger.info('Currently playing playlist', effectivePlaylist)
 	});
 
 	// Configuration default values
@@ -139,27 +139,43 @@ NFCReader.prototype.getUIConfig = function () {
 			uiconf.sections[1].content[1].value = self.config.get('pollingRate');
 			uiconf.sections[1].content[2].value = self.config.get('debounceThreshold');
 
-			self.tokenManager.getAllAssignments().map((assignment) => {
-				self.logger.info('Found assignment', JSON.stringify(assignment));
-				
-				uiconf.sections[2].content.push(
-					{
-						"id": `unassign_${assignment.uid}`,
-						"element": "button",
-						"label": `${assignment.data}`,
-						"onClick": {
-							"type": "emit",
-							"message": "callMethod",
-							"data": {
-								"endpoint": "user_interface/raspi_nfc_spi",
-								"method": "unassignToken",
-								"data": assignment.uid
+			socket.emit('listPlaylist');
+			socket.once('pushListPlaylist', (playlists) => {
+
+				// fill playlist select box
+				playlists.map((playlist)=>{
+					uiconf.sections[0].content[0].options.push({value: playlist, label: playlist});
+				});
+
+				// the currently playing playlist is the default
+				if (effectivePlaylist) {
+					uiconf.sections[0].content[0].value.value = effectivePlaylist;
+					uiconf.sections[0].content[0].value.label = effectivePlaylist;
+				}
+
+				// dynamically create elements for all assigments to delete them
+				self.tokenManager.getAllAssignments().map((assignment) => {
+					self.logger.info('Found assignment', JSON.stringify(assignment));
+
+					uiconf.sections[2].content.push(
+						{
+							"id": `unassign_${assignment.uid}`,
+							"element": "button",
+							"label": `${assignment.data}`,
+							"onClick": {
+								"type": "emit",
+								"message": "callMethod",
+								"data": {
+									"endpoint": "user_interface/raspi_nfc_spi",
+									"method": "unassignToken",
+									"data": assignment.uid
+								}
 							}
-						}
-					});
-				
+						});
+
+				})
+				defer.resolve(uiconf);
 			})
-			defer.resolve(uiconf);
 		})
 		.fail(function () {
 			defer.reject(new Error());
@@ -195,7 +211,7 @@ NFCReader.prototype.handleCardDetected = function (uid) {
 	self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
 	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
 
-	if (playlist && playlist !== self.currentPlaylist) {
+	if (playlist && playlist !== effectivePlaylist) {
 		socket.emit('playPlaylist', {
 			"name": playlist
 		});
@@ -236,27 +252,28 @@ NFCReader.prototype.unRegisterWatchDaemon = function () {
 	return libQ.resolve();
 };
 
-NFCReader.prototype.saveCurrentPlaying = function () {
+NFCReader.prototype.assignPlaylist = function (playlist) {
 	const self = this;
+	const effectivePlaylist = playlist || self.currentPlaylist;
 
 	if (!self.currentTokenUid) {
 		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
 		return false;
 	}
 
-	if (!self.currentPlaylist) {
+	if (!effectivePlaylist) {
 		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "Start the playlist which shall be assigned");
 		return false;
 	}
 
-	self.logger.info('I shall assign token UID', self.currentTokenUid, 'to', self.currentPlaylist);
+	self.logger.info('I shall assign token UID', self.currentTokenUid, 'to', effectivePlaylist);
 
 	try {
-		if (self.currentTokenUid && self.currentPlaylist
-			&& self.tokenManager.assignToken(self.currentTokenUid, self.currentPlaylist)) {
+		if (self.currentTokenUid && effectivePlaylist
+			&& self.tokenManager.assignToken(self.currentTokenUid, effectivePlaylist)) {
 
-			// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
-			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${self.currentPlaylist}`);
+			// self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${effectivePlaylist}`);
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `Token ${self.currentTokenUid} assigned to ${effectivePlaylist}`);
 			return true;
 		};
 	} catch (err) {

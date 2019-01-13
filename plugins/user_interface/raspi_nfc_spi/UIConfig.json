@@ -10,6 +10,22 @@
       "icon": "fa-plug",
       "content": [
         {
+          "id": "playlist",
+          "element": "select",
+          "label": "TRANSLATE.PLAYLIST",
+          "value": {
+            "value": null,
+            "label": "TRANSLATE.PLAYLIST_SELECT"
+          },
+          "options": [
+            {
+              "value": null,
+              "label": "TRANSLATE.PLAYLIST_SELECT"
+            }
+          ],
+          "description": "TRANSLATE.PLAYLIST_DESC"
+        },
+        {
           "id": "assignToken",
           "element": "button",
           "label": "TRANSLATE.ASSIGN",
@@ -20,24 +36,8 @@
             "message": "callMethod",
             "data": {
               "endpoint": "user_interface/raspi_nfc_spi",
-              "method": "saveCurrentPlaying",
-              "data": ""
-            }
-          }
-        },
-        {
-          "id": "unassignToken",
-          "element": "button",
-          "label": "TRANSLATE.UNASSIGN",
-          "description": "TRANSLATE.UNASSIGN_TAG",
-          "doc": "TRANSLATE.UNASSIGN_TAG_DOC",
-          "onClick": {
-            "type": "emit",
-            "message": "callMethod",
-            "data": {
-              "endpoint": "user_interface/raspi_nfc_spi",
-              "method": "unassignToken",
-              "data": ""
+              "method": "assignPlaylist",
+              "data": "playlist"
             }
           }
         }
