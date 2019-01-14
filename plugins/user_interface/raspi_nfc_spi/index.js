@@ -44,8 +44,8 @@ NFCReader.prototype.onStart = function () {
 
 	// register callback to sniff which playlist is currently playing
 	socket.on('playingPlaylist', function (playlist) {
-		effectivePlaylist = playlist;
-		self.logger.info('Currently playing playlist', effectivePlaylist)
+		self.currentPlaylist = playlist;
+		self.logger.info('Currently playing playlist', self.currentPlaylist)
 	});
 
 	// Configuration default values
@@ -142,15 +142,17 @@ NFCReader.prototype.getUIConfig = function () {
 			socket.emit('listPlaylist');
 			socket.once('pushListPlaylist', (playlists) => {
 
+
 				// fill playlist select box
 				playlists.map((playlist)=>{
 					uiconf.sections[0].content[0].options.push({value: playlist, label: playlist});
 				});
 
+
 				// the currently playing playlist is the default
-				if (effectivePlaylist) {
-					uiconf.sections[0].content[0].value.value = effectivePlaylist;
-					uiconf.sections[0].content[0].value.label = effectivePlaylist;
+				if (self.currentPlaylist) {
+					uiconf.sections[0].content[0].value.value = self.currentPlaylist;
+					uiconf.sections[0].content[0].value.label = self.currentPlaylist;
 				}
 
 				// dynamically create elements for all assigments to delete them
