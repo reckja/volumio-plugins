@@ -135,9 +135,9 @@ NFCReader.prototype.getUIConfig = function () {
 		__dirname + '/i18n/strings_en.json',
 		__dirname + '/UIConfig.json')
 		.then(function (uiconf) {
-			uiconf.sections[1].content[0].value.value = self.config.get('spi');
-			uiconf.sections[1].content[1].value = self.config.get('pollingRate');
-			uiconf.sections[1].content[2].value = self.config.get('debounceThreshold');
+			uiconf.sections[2].content[0].value.value = self.config.get('spi');
+			uiconf.sections[2].content[1].value = self.config.get('pollingRate');
+			uiconf.sections[2].content[2].value = self.config.get('debounceThreshold');
 
 			socket.emit('listPlaylist');
 			socket.once('pushListPlaylist', (playlists) => {
@@ -159,7 +159,7 @@ NFCReader.prototype.getUIConfig = function () {
 				self.tokenManager.getAllAssignments().map((assignment) => {
 					self.logger.info('Found assignment', JSON.stringify(assignment));
 
-					uiconf.sections[2].content.push(
+					uiconf.sections[1].content.push(
 						{
 							"id": `unassign_${assignment.uid}`,
 							"element": "button",
