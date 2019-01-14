@@ -51,6 +51,33 @@
       "content": []
     },
     {
+      "id": "playbackOptions",
+      "element": "section",
+      "label": "TRANSLATE.PLAYBACK_OPTIONS",
+      "icon": "fa-plug",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/raspi_nfc_spi",
+        "method": "stopWhenRemoved"
+      },
+      "saveButton": {
+        "label": "TRANSLATE.SAVE",
+        "data": [
+          "stopWhenRemoved"
+        ]
+      },
+      "content": [
+        {
+          "id": "stopWhenRemoved",
+          "element": "switch",
+          "label": "TRANSLATE.STOP_WHEN_REMOVED",
+          "description": "TRANSLATE.STOP_WHEN_REMOVED_DESC",
+          "doc": "TRANSLATE.STOP_WHEN_REMOVED_DOC",
+          "value": false
+        }
+      ]
+    },
+    {
       "id": "nfc_reader_tech",
       "element": "section",
       "label": "TRANSLATE.NFC_READER_TECH",
@@ -58,7 +85,7 @@
       "onSave": {
         "type": "controller",
         "endpoint": "user_interface/raspi_nfc_spi",
-        "method": "saveConfiguration"
+        "method": "saveTechConfiguration"
       },
       "saveButton": {
         "label": "TRANSLATE.SAVE",

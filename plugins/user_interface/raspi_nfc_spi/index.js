@@ -135,31 +135,36 @@ NFCReader.prototype.getUIConfig = function () {
 		__dirname + '/i18n/strings_en.json',
 		__dirname + '/UIConfig.json')
 		.then(function (uiconf) {
-			uiconf.sections[2].content[0].value.value = self.config.get('spi');
-			uiconf.sections[2].content[1].value = self.config.get('pollingRate');
-			uiconf.sections[2].content[2].value = self.config.get('debounceThreshold');
+			const unassignSection = uiconf.sections[1];
+			const techSection = uiconf.sections[3];
+			const playlistSelectBox = uiconf.sections[0].content[0];
 
+			// Technical Reader settings
+			techSection.content[0].value.value = self.config.get('spi');
+			techSection.content[1].value = self.config.get('pollingRate');
+			techSection.content[2].value = self.config.get('debounceThreshold');
+
+			// finally, we dynamically add the playlist-related informations to the configuration
+			// Since this can only be resolved inside a callback and we need to resolve this promise,
+			// we do this last in this method
 			socket.emit('listPlaylist');
 			socket.once('pushListPlaylist', (playlists) => {
-
-
 				// fill playlist select box
 				playlists.map((playlist) => {
-					uiconf.sections[0].content[0].options.push({ value: playlist, label: playlist });
+					playlistSelectBox.options.push({ value: playlist, label: playlist });
 				});
-
 
 				// the currently playing playlist is the default
 				if (self.currentPlaylist) {
-					uiconf.sections[0].content[0].value.value = self.currentPlaylist;
-					uiconf.sections[0].content[0].value.label = self.currentPlaylist;
+					playlistSelectBox.value.value = self.currentPlaylist;
+					playlistSelectBox.value.label = self.currentPlaylist;
 				}
 
 				// dynamically create elements for all assigments to delete them
 				self.tokenManager.getAllAssignments().map((assignment) => {
 					self.logger.info('Found assignment', JSON.stringify(assignment));
 
-					uiconf.sections[1].content.push(
+					unassignSection.content.push(
 						{
 							"id": `unassign_${assignment.uid}`,
 							"element": "button",
@@ -187,7 +192,7 @@ NFCReader.prototype.getUIConfig = function () {
 };
 
 
-NFCReader.prototype.saveConfiguration = function (data) {
+NFCReader.prototype.saveTechConfiguration = function (data) {
 	const self = this;
 
 	self.logger.info(MY_LOG_NAME, 'Saving config', JSON.stringify(data));
@@ -200,6 +205,16 @@ NFCReader.prototype.saveConfiguration = function (data) {
 
 	self.unRegisterWatchDaemon()
 		.then(() => self.registerWatchDaemon());
+};
+
+NFCReader.prototype.savePlaybackOptions = function (data) {
+	const self = this;
+
+	self.logger.info(MY_LOG_NAME, 'Saving config', JSON.stringify(data));
+
+	self.config.set('stopWhenRemoved', data.stopWhenRemoved);
+
+	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, "Configuration saved");
 };
 
 NFCReader.prototype.handleTokenDetected = function (uid) {
@@ -230,6 +245,17 @@ NFCReader.prototype.handleTokenRemoved = function (uid) {
 	// self.commandRouter.pushToastMessage('success', 'NFC card removed', serializeUid(uid));
 	self.currentTokenUid = null;
 	self.logger.info('NFC card removed', uid);
+
+	if (self.config.get('stopWhenRemoved')) {
+		socket.emit('getState', '');
+		socket.once('pushState', (state) => {
+			if (state.status == 'play' && state.service == 'webradio') {
+				socket.emit('stop');
+			} else {
+				socket.emit('pause');
+			}
+		});
+	}
 }
 
 NFCReader.prototype.registerWatchDaemon = function () {
