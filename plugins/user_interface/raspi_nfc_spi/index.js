@@ -144,8 +144,8 @@ NFCReader.prototype.getUIConfig = function () {
 
 
 				// fill playlist select box
-				playlists.map((playlist)=>{
-					uiconf.sections[0].content[0].options.push({value: playlist, label: playlist});
+				playlists.map((playlist) => {
+					uiconf.sections[0].content[0].options.push({ value: playlist, label: playlist });
 				});
 
 
@@ -202,7 +202,7 @@ NFCReader.prototype.saveConfiguration = function (data) {
 		.then(() => self.registerWatchDaemon());
 };
 
-NFCReader.prototype.handleCardDetected = function (uid) {
+NFCReader.prototype.handleTokenDetected = function (uid) {
 	const self = this;
 
 	// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
@@ -211,7 +211,12 @@ NFCReader.prototype.handleCardDetected = function (uid) {
 	const playlist = self.tokenManager.readToken(self.currentTokenUid);
 
 	self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
-	self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
+
+	if (playlist) {
+		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
+	} else {
+		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `An unassigned token (UID ${uid}) has been detected`);
+	}
 
 	if (playlist && playlist !== effectivePlaylist) {
 		socket.emit('playPlaylist', {
@@ -220,7 +225,7 @@ NFCReader.prototype.handleCardDetected = function (uid) {
 	}
 }
 
-NFCReader.prototype.handleCardRemoved = function (uid) {
+NFCReader.prototype.handleTokenRemoved = function (uid) {
 	const self = this;
 	// self.commandRouter.pushToastMessage('success', 'NFC card removed', serializeUid(uid));
 	self.currentTokenUid = null;
@@ -240,7 +245,7 @@ NFCReader.prototype.registerWatchDaemon = function () {
 	self.logger.info(MY_LOG_NAME, 'polling rate', pollingRate);
 	self.logger.info(MY_LOG_NAME, 'debounce threshold', debounceThreshold);
 
-	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleCardDetected.bind(this), self.handleCardRemoved.bind(this), self.logger, pollingRate, debounceThreshold);
+	self.nfcDaemon = new MFRC522Daemon(spiChannel, self.handleTokenDetected.bind(this), self.handleTokenRemoved.bind(this), self.logger, pollingRate, debounceThreshold);
 
 	self.nfcDaemon.start();
 	return libQ.resolve();
