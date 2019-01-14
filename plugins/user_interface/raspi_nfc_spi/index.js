@@ -285,7 +285,7 @@ NFCReader.prototype.unRegisterWatchDaemon = function () {
 	return libQ.resolve();
 };
 
-NFCReader.prototype.assignPlaylist = function (playlist) {
+NFCReader.prototype.assignPlaylist = function ({ playlist }) {
 	const self = this;
 	const effectivePlaylist = playlist || self.currentPlaylist;
 

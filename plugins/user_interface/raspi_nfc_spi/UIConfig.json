@@ -37,7 +37,9 @@
             "data": {
               "endpoint": "user_interface/raspi_nfc_spi",
               "method": "assignPlaylist",
-              "data": "playlist"
+              "data": [
+                "playlist"
+              ]
             }
           }
         }
