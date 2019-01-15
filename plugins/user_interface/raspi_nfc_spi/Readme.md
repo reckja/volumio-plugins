@@ -8,9 +8,12 @@ This plugin provides a configurable mapper of tokens to volumio playlists.
 ## How it looks like
 
 Managing assignments of tokens and playlists
-![The configuration page is used for assigning playlists](./plugins/user_interface/raspi_nfc_spi/docs/UI-config-token-management.png)
 
-![Playback and technical options](./plugins/user_interface/raspi_nfc_spi/docs/UI-config-playback-tech.png)
+![The configuration page is used for assigning playlists](docs/UI-config-token-management.png "the configuration page is used for assigning playlists")
+
+Playback and technical options
+
+![Playback and technical options](docs/UI-config-playback-tech.png)
 
 ## Hardware
 
