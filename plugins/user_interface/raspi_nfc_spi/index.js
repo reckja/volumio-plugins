@@ -287,7 +287,7 @@ NFCReader.prototype.unRegisterWatchDaemon = function () {
 
 NFCReader.prototype.assignPlaylist = function ({ playlist }) {
 	const self = this;
-	const effectivePlaylist = playlist || self.currentPlaylist;
+	const effectivePlaylist = playlist.value || self.currentPlaylist;
 
 	if (!self.currentTokenUid) {
 		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, "No NFC token detected");
