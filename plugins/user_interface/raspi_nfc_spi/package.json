@@ -1,6 +1,6 @@
 {
 	"name": "raspi_nfc_spi",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "Start and stop playlists on your Raspberry PI with MiFare RC522 and NFC tags",
 	"main": "index.js",
 	"scripts": {

@@ -41,7 +41,7 @@
     {
       "id": "token_unassignment",
       "element": "section",
-      "label": "TRANSLATE.SECTION_TM_ASSIGN",
+      "label": "TRANSLATE.SECTION_TM_UNASSIGN",
       "icon": "fa-plug",
       "content": []
     },

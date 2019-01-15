@@ -6,7 +6,7 @@
   "ERROR_NO_PLAYLIST": "Start the playlist which shall be assigned", 
   "NFC_READER_DEBOUNCE_THRESHOLD": "Debounce threshold",
   "NFC_READER_DEBOUNCE_THRESHOLD_DOC": "Sometimes, the reader loses sight of a token. This threshold can be configured to ignore those disconnects until the token is considered removed.",
-  "NFC_READER_TECH": "Technical settings of NFC reader",
+  "NFC_READER_TECH": "Technical settings",
   "NFC_READER_SPI_CHANNEL": "SPI device number",
   "NFC_READER_SPI_CHANNEL_DOC": "The technical number of the SPI device your reader is connected to.",
   "NFC_READER_POLL_RATE": "Polling rate",

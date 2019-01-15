@@ -6,7 +6,7 @@
   "ERROR_NO_PLAYLIST": "Starte eine Wiedergabeliste, bevor Du hier drauf drückst", 
   "NFC_READER_DEBOUNCE_THRESHOLD": "Wiederverbindung",
   "NFC_READER_DEBOUNCE_THRESHOLD_DOC": "Manchmal verliert der Reader kurzfristig das Token  aus den Augen. Mit diesem Zähler kann die Anzahl der ignorierten Fehler eingestellt werden,um die Verbindung zu stabilisieren",
-  "NFC_READER_TECH": "Technische Einstellungen des NFC readers",
+  "NFC_READER_TECH": "Technische Einstellungen",
   "NFC_READER_SPI_CHANNEL": "SPI Gerätenummer",
   "NFC_READER_SPI_CHANNEL_DOC": "Die technische Nummer des SPI Geräts, an den der Reader angeschlossen ist",
   "NFC_READER_POLL_RATE": "Polling-Frequenz",
