@@ -8,6 +8,17 @@
       "element": "section",
       "label": "TRANSLATE.TOKEN_MANAGEMENT",
       "icon": "fa-plug",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "user_interface/raspi_nfc_spi",
+        "method": "assignPlaylist"
+      },
+      "saveButton": {
+        "label": "TRANSLATE.ASSIGN",
+        "data": [
+          "playlist"
+        ]
+      },
       "content": [
         {
           "id": "playlist",
@@ -24,24 +35,6 @@
             }
           ],
           "description": "TRANSLATE.PLAYLIST_DESC"
-        },
-        {
-          "id": "assignToken",
-          "element": "button",
-          "label": "TRANSLATE.ASSIGN",
-          "description": "TRANSLATE.ASSIGN_TAG",
-          "doc": "TRANSLATE.ASSIGN_TAG_DOC",
-          "onClick": {
-            "type": "emit",
-            "message": "callMethod",
-            "data": {
-              "endpoint": "user_interface/raspi_nfc_spi",
-              "method": "assignPlaylist",
-              "data": [
-                "playlist"
-              ]
-            }
-          }
         }
       ]
     },
