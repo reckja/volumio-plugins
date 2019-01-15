@@ -16,6 +16,8 @@
   "PLAYLIST_SELECT": "--- Select a playlist ---",
   "PLAYLIST_DESC": "Playlist to be assigned",
   "SAVE": "Save",
+  "SECTION_TM_ASSIGN": "Assign NFC-tokens",
+  "SECTION_TM_UNASSIGN": "Unassign NFC-tokens",
   "STOP_WHEN_REMOVED": "Automatic stop",
   "STOP_WHEN_REMOVED_DESC": "Stop replay when token is removed",
   "STOP_WHEN_REMOVED_DOC": "Shall the playback be paused once the token is not detected by the NFC reader anymore? If the connection is instable, you may set a foult tolerance in the technical configration further down the settings to prevent stuttering",

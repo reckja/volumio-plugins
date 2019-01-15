@@ -16,6 +16,8 @@
   "PLAYLIST_SELECT": "--- Wiedergabeliste auswählen ---",
   "PLAYLIST_DESC": "Zuzuordnende Wiedergabeliste",
   "SAVE": "Speichern",
+  "SECTION_TM_ASSIGN": "NFC-Tokens zuordnen",
+  "SECTION_TM_UNASSIGN": "Zuordnungen entfernen",
   "STOP_WHEN_REMOVED": "Automatisch anhalten",
   "STOP_WHEN_REMOVED_DESC": "Wiedergabe anhalten, wenn ein Token entfernt wurde",
   "STOP_WHEN_REMOVED_DOC": "Soll die Wiedergabe pausiert werden, wenn ein Token vom Reader nicht mehr erkannt wird? Bei einer instabilen Verbindung kann dies zu Aussetzern führen. Eine Fehlertoleranz kann weiter unten in den technischen Einstellungen konfiguriert werden, um dem entgegen zu wirken",

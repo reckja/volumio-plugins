@@ -4,9 +4,9 @@
   },
   "sections": [
     {
-      "id": "token_management",
+      "id": "token_assignment",
       "element": "section",
-      "label": "TRANSLATE.TOKEN_MANAGEMENT",
+      "label": "TRANSLATE.SECTION_TM_ASSIGN",
       "icon": "fa-plug",
       "onSave": {
         "type": "controller",
@@ -39,9 +39,9 @@
       ]
     },
     {
-      "id": "assigned_tokens",
+      "id": "token_unassignment",
       "element": "section",
-      "label": "TRANSLATE.TOKEN_MANAGEMENT",
+      "label": "TRANSLATE.SECTION_TM_ASSIGN",
       "icon": "fa-plug",
       "content": []
     },
