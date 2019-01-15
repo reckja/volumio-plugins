@@ -30,3 +30,4 @@ _Remark: Each plugin has its own Readme, so for better understanding of each (an
 | State | Self-built |
 | Installation | clone this repository, head to the [plugin folder](./plugins/user_interface/raspi_nfc_spi) and execute `volumio plugin install` |
 | Why unofficial? | I basically built this for my own prject. It's my first-time implementation of a plugin, so I'll wait some time for real user feedback (son and wife) before I dare submit an official PR ;) |
+| More information | See [the plugin's readme](./plugins/user_interface/raspi_nfc_spi/Readme.md) |
