@@ -223,21 +223,30 @@ NFCReader.prototype.handleTokenDetected = function (uid) {
 	// self.commandRouter.pushToastMessage('success', 'NFC card detected', serializeUid(uid));
 	self.currentTokenUid = uid;
 	self.logger.info('NFC card detected', self.currentTokenUid);
-	const playlist = self.tokenManager.readToken(self.currentTokenUid);
 
-	self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
+	// We can only play once Volumio is ready to play (has started completely)
+	// Thus, we ask Volumio for the state. It will (hopefully) be returned only 
+	// once the player's ready - and then we play.
+	// If we don't wait, we'll cause an infinite error-reboot-loop
+	socket.emit('getState', '');
+	socket.once('pushState', () => { // no, Volumio is ready
 
-	if (playlist) {
-		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
-	} else {
-		self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `An unassigned token (UID ${uid}) has been detected`);
-	}
+		const playlist = self.tokenManager.readToken(self.currentTokenUid);
 
-	if (playlist && playlist !== self.currentPlaylist) {
-		socket.emit('playPlaylist', {
-			"name": playlist
-		});
-	}
+		self.logger.info(`${MY_LOG_NAME} requesting to play playlist`, playlist);
+
+		if (playlist) {
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `requesting to play playlist ${playlist}`);
+		} else {
+			self.commandRouter.pushToastMessage('success', MY_LOG_NAME, `An unassigned token (UID ${uid}) has been detected`);
+		}
+
+		if (playlist && playlist !== self.currentPlaylist) {
+			socket.emit('playPlaylist', {
+				"name": playlist
+			});
+		}
+	});
 }
 
 NFCReader.prototype.handleTokenRemoved = function (uid) {
