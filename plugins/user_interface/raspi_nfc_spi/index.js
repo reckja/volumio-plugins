@@ -319,6 +319,7 @@ NFCReader.prototype.assignPlaylist = function ({ playlist }) {
 			return true;
 		};
 	} catch (err) {
+		self.commandRouter.pushToastMessage('error', MY_LOG_NAME, err);
 		self.logger.info(`${MY_LOG_NAME}: could not assign token uid`, self.currentTokenUid, err);
 	}
 }
