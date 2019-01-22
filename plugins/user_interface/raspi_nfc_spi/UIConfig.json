@@ -53,7 +53,7 @@
       "onSave": {
         "type": "controller",
         "endpoint": "user_interface/raspi_nfc_spi",
-        "method": "stopWhenRemoved"
+        "method": "savePlaybackOptions"
       },
       "saveButton": {
         "label": "TRANSLATE.SAVE",
