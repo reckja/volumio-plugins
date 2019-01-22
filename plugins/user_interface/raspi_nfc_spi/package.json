@@ -4,7 +4,8 @@
 	"description": "Start and stop playlists on your Raspberry PI with MiFare RC522 and NFC tags",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"release": "release-it"
 	},
 	"author": "Oliver Jaegle",
 	"license": "MIT",
@@ -21,5 +22,8 @@
 		"socket.io-client": "^1.4.5",
 		"v-conf": "^1.4.0",
 		"fs-extra": "^0.28.0"
+	},
+	"devDependencies": {
+		"release-it": "^10.0.1"
 	}
 }
