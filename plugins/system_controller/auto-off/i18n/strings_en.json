@@ -3,6 +3,6 @@
   "IDLE_DETECTION": "Idle detection",
   "NOT_PLAYING_DURATION": "Not playing for",
   "NOT_PLAYING_DURATION_DESC": "seconds",
-  "NOT_PLAYING_DURATION_DOC": "The duration in seconds for which the system is not playing somemthing before it gets shut down.",
+  "NOT_PLAYING_DURATION_DOC": "Enter a duration in seconds. If the system has not plaed anything during this timeframe, the system will be shut down automatically.",
   "SAVE":"Save"
 }

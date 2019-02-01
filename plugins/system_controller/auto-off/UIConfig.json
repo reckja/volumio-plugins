@@ -11,7 +11,7 @@
       "onSave": {
         "type": "controller",
         "endpoint": "system_controller/auto-off",
-        "method": "save-settings"
+        "method": "saveIdleDetection"
       },
       "saveButton": {
         "label": "TRANSLATE.SAVE",
@@ -25,6 +25,7 @@
           "element": "input",
           "type": "number",
           "label": "TRANSLATE.NOT_PLAYING_DURATION",
+          "description": "TRANSLATE.NOT_PLAYING_DURATION_DESC",
           "doc": "TRANSLATE.NOT_PLAYING_DURATION_DOC",
           "value": 300
         }

@@ -18,11 +18,14 @@ function autoOff(context) {
 
 }
 
-//shutdown
 autoOff.prototype.shutdown = function () {
 	this.logger.info('You don\'t need me. Bye\n');
 	// this.commandRouter.shutdown();
 };
+
+autoOff.prototype.saveIdleDetection = function({notPlayingDuration}){
+	this.notPlayingDuration = notPlayingDuration;
+}
 
 autoOff.prototype.onVolumioStart = function () {
 	var self = this;
