@@ -3,5 +3,32 @@
     "label": "TRANSLATE.PLUGIN_CONFIGURATION"
   },
   "sections": [
+    {
+      "id": "idle-detection",
+      "element": "section",
+      "label": "TRANSLATE.IDLE_DETECTION",
+      "icon": "fa-plug",
+      "onSave": {
+        "type": "controller",
+        "endpoint": "system_controller/auto-off",
+        "method": "save-settings"
+      },
+      "saveButton": {
+        "label": "TRANSLATE.SAVE",
+        "data": [
+          "notPlayingDuration"
+        ]
+      },
+      "content": [
+        {
+          "id": "notPlayingDuration",
+          "element": "input",
+          "type": "number",
+          "label": "TRANSLATE.NOT_PLAYING_DURATION",
+          "doc": "TRANSLATE.NOT_PLAYING_DURATION_DOC",
+          "value": 300
+        }
+      ]
+    }
   ]
 }

@@ -1,4 +1,8 @@
 {
-  "PLUGIN_CONFIGURATION":"Example Plugin Configuration",
+  "PLUGIN_CONFIGURATION":"Auto shutdown",
+  "IDLE_DETECTION": "Idle detection",
+  "NOT_PLAYING_DURATION": "Not playing for",
+  "NOT_PLAYING_DURATION_DESC": "seconds",
+  "NOT_PLAYING_DURATION_DOC": "The duration in seconds for which the system is not playing somemthing before it gets shut down.",
   "SAVE":"Save"
 }
