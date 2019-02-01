@@ -5,8 +5,9 @@ const io = require('socket.io-client');
 const socket = io.connect('http://localhost:3000');
 
 
-module.exports = autoOff;
-function autoOff(context) {
+module.exports = AutoOff;
+
+function AutoOff(context) {
 	var self = this;
 
 	this.context = context;
@@ -18,16 +19,18 @@ function autoOff(context) {
 
 }
 
-autoOff.prototype.shutdown = function () {
+AutoOff.prototype.shutdown = function () {
 	this.logger.info('You don\'t need me. Bye\n');
 	// this.commandRouter.shutdown();
 };
 
-autoOff.prototype.saveIdleDetection = function({notPlayingDuration}){
+AutoOff.prototype.saveIdleDetection = function({notPlayingDuration}){
 	this.notPlayingDuration = notPlayingDuration;
+
+	this.commandRouter.pushToastMessage('success',"AutoOff", "Configuration saved");
 }
 
-autoOff.prototype.onVolumioStart = function () {
+AutoOff.prototype.onVolumioStart = function () {
 	var self = this;
 	var configFile = this.commandRouter.pluginManager.getConfigurationFile(this.context, 'config.json');
 	this.config = new (require('v-conf'))();
@@ -36,7 +39,7 @@ autoOff.prototype.onVolumioStart = function () {
 	return libQ.resolve();
 }
 
-autoOff.prototype.onStart = function () {
+AutoOff.prototype.onStart = function () {
 	var self = this;
 	var defer = libQ.defer();
 
@@ -61,7 +64,7 @@ autoOff.prototype.onStart = function () {
 		return defer.promise;
 	};
 
-	autoOff.prototype.onStop = function () {
+	AutoOff.prototype.onStop = function () {
 		var self = this;
 		var defer = libQ.defer();
 
@@ -75,7 +78,7 @@ autoOff.prototype.onStart = function () {
 		return libQ.resolve();
 	};
 
-	autoOff.prototype.onRestart = function () {
+	AutoOff.prototype.onRestart = function () {
 		var self = this;
 		// Optional, use if you need it
 	};
@@ -83,7 +86,7 @@ autoOff.prototype.onStart = function () {
 
 	// Configuration Methods -----------------------------------------------------------------------------
 
-	autoOff.prototype.getUIConfig = function () {
+	AutoOff.prototype.getUIConfig = function () {
 		var defer = libQ.defer();
 		var self = this;
 
@@ -104,21 +107,21 @@ autoOff.prototype.onStart = function () {
 		return defer.promise;
 	};
 
-	autoOff.prototype.getConfigurationFiles = function () {
+	AutoOff.prototype.getConfigurationFiles = function () {
 		return ['config.json'];
 	}
 
-	autoOff.prototype.setUIConfig = function (data) {
+	AutoOff.prototype.setUIConfig = function (data) {
 		var self = this;
 		//Perform your installation tasks here
 	};
 
-	autoOff.prototype.getConf = function (varName) {
+	AutoOff.prototype.getConf = function (varName) {
 		var self = this;
 		//Perform your installation tasks here
 	};
 
-	autoOff.prototype.setConf = function (varName, varValue) {
+	AutoOff.prototype.setConf = function (varName, varValue) {
 		var self = this;
 		//Perform your installation tasks here
 	};
@@ -129,14 +132,14 @@ autoOff.prototype.onStart = function () {
 	// If your plugin is not a music_sevice don't use this part and delete it
 
 
-	autoOff.prototype.addToBrowseSources = function () {
+	AutoOff.prototype.addToBrowseSources = function () {
 
 		// Use this function to add your music service plugin to music sources
 		//var data = {name: 'Spotify', uri: 'spotify',plugin_type:'music_service',plugin_name:'spop'};
 		this.commandRouter.volumioAddToBrowseSources(data);
 	};
 
-	autoOff.prototype.handleBrowseUri = function (curUri) {
+	AutoOff.prototype.handleBrowseUri = function (curUri) {
 		var self = this;
 
 		//self.commandRouter.logger.info(curUri);
@@ -149,63 +152,63 @@ autoOff.prototype.onStart = function () {
 
 
 	// Define a method to clear, add, and play an array of tracks
-	autoOff.prototype.clearAddPlayTrack = function (track) {
+	AutoOff.prototype.clearAddPlayTrack = function (track) {
 		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::clearAddPlayTrack');
+		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::clearAddPlayTrack');
 
 		self.commandRouter.logger.info(JSON.stringify(track));
 
 		return self.sendSpopCommand('uplay', [track.uri]);
 	};
 
-	autoOff.prototype.seek = function (timepos) {
-		this.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::seek to ' + timepos);
+	AutoOff.prototype.seek = function (timepos) {
+		this.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::seek to ' + timepos);
 
 		return this.sendSpopCommand('seek ' + timepos, []);
 	};
 
 	// Stop
-	autoOff.prototype.stop = function () {
+	AutoOff.prototype.stop = function () {
 		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::stop');
+		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::stop');
 
 
 	};
 
 	// Spop pause
-	autoOff.prototype.pause = function () {
+	AutoOff.prototype.pause = function () {
 		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::pause');
+		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::pause');
 
 
 	};
 
 	// Get state
-	autoOff.prototype.getState = function () {
+	AutoOff.prototype.getState = function () {
 		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::getState');
+		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::getState');
 
 
 	};
 
 	//Parse state
-	autoOff.prototype.parseState = function (sState) {
+	AutoOff.prototype.parseState = function (sState) {
 		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::parseState');
+		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::parseState');
 
 		//Use this method to parse the state and eventually send it with the following function
 	};
 
 	// Announce updated State
-	autoOff.prototype.pushState = function (state) {
+	AutoOff.prototype.pushState = function (state) {
 		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'autoOff::pushState');
+		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::pushState');
 
 		return self.commandRouter.servicePushState(state, self.servicename);
 	};
 
 
-	autoOff.prototype.explodeUri = function (uri) {
+	AutoOff.prototype.explodeUri = function (uri) {
 		var self = this;
 		var defer = libQ.defer();
 
@@ -214,7 +217,7 @@ autoOff.prototype.onStart = function () {
 		return defer.promise;
 	};
 
-	autoOff.prototype.getAlbumArt = function (data, path) {
+	AutoOff.prototype.getAlbumArt = function (data, path) {
 
 		var artist, album;
 
@@ -253,7 +256,7 @@ autoOff.prototype.onStart = function () {
 
 
 
-	autoOff.prototype.search = function (query) {
+	AutoOff.prototype.search = function (query) {
 		var self = this;
 		var defer = libQ.defer();
 
@@ -262,19 +265,19 @@ autoOff.prototype.onStart = function () {
 		return defer.promise;
 	};
 
-	autoOff.prototype._searchArtists = function (results) {
+	AutoOff.prototype._searchArtists = function (results) {
 
 	};
 
-	autoOff.prototype._searchAlbums = function (results) {
+	AutoOff.prototype._searchAlbums = function (results) {
 
 	};
 
-	autoOff.prototype._searchPlaylists = function (results) {
+	AutoOff.prototype._searchPlaylists = function (results) {
 
 
 	};
 
-	autoOff.prototype._searchTracks = function (results) {
+	AutoOff.prototype._searchTracks = function (results) {
 
 	};
