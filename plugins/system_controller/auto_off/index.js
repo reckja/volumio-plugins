@@ -25,8 +25,7 @@ AutoOff.prototype.shutdown = function () {
 };
 
 AutoOff.prototype.saveIdleDetection = function({notPlayingDuration}){
-	this.notPlayingDuration = notPlayingDuration;
-
+	this.config.set('notPlayingDuration', notPlayingDuration);
 	this.commandRouter.pushToastMessage('success',"AutoOff", "Configuration saved");
 }
 
