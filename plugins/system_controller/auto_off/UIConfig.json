@@ -10,7 +10,7 @@
       "icon": "fa-plug",
       "onSave": {
         "type": "controller",
-        "endpoint": "system_controller/auto-off",
+        "endpoint": "system_controller/auto_off",
         "method": "saveIdleDetection"
       },
       "saveButton": {
