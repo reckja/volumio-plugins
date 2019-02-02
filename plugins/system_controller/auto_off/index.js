@@ -19,14 +19,20 @@ function AutoOff(context) {
 
 }
 
-AutoOff.prototype.shutdown = function () {
+AutoOff.prototype.safeShutdown = function () {
 	this.logger.info(`No playback for ${this.config.get('notPlayingDuration')}. Shutting down to save energy. Bye\n`);
-	this.commandRouter.shutdown();
+
+	socket.emit('getState', '');
+	socket.once('pushState', (state) => {
+		if (state.status !== 'play' && state.service !== 'webradio') {
+			this.commandRouter.shutdown();
+		}
+	})
 };
 
-AutoOff.prototype.saveIdleDetection = function({notPlayingDuration}){
+AutoOff.prototype.saveIdleDetection = function ({ notPlayingDuration }) {
 	this.config.set('notPlayingDuration', notPlayingDuration);
-	this.commandRouter.pushToastMessage('success',"AutoOff", "Configuration saved");
+	this.commandRouter.pushToastMessage('success', "AutoOff", "Configuration saved");
 }
 
 AutoOff.prototype.onVolumioStart = function () {
@@ -49,7 +55,7 @@ AutoOff.prototype.onStart = function () {
 
 			self.logger.info(`Going to shut myself down in ${timeout} seconds, unless something is played`);
 			self.shutdownTimeout = setTimeout(() => {
-				self.shutdown();
+				self.safeShutdown();
 			}, timeout * 1000);
 		} else {
 			// self.logger.info(`Hoooray - I'm playing again. Cancelled my shutdown`);
@@ -57,227 +63,227 @@ AutoOff.prototype.onStart = function () {
 		}
 	});
 
-		// Once the Plugin has successfull started resolve the promise
-		defer.resolve();
+	// Once the Plugin has successfull started resolve the promise
+	defer.resolve();
 
-		return defer.promise;
-	};
+	return defer.promise;
+};
 
-	AutoOff.prototype.onStop = function () {
-		var self = this;
-		var defer = libQ.defer();
+AutoOff.prototype.onStop = function () {
+	var self = this;
+	var defer = libQ.defer();
 
-		if (this.shutdownTimeout) {
-			clearTimeout(this.shutdownTimeout);
-		}
-
-		// Once the Plugin has successfull stopped resolve the promise
-		defer.resolve();
-
-		return libQ.resolve();
-	};
-
-	AutoOff.prototype.onRestart = function () {
-		var self = this;
-		// Optional, use if you need it
-	};
-
-
-	// Configuration Methods -----------------------------------------------------------------------------
-
-	AutoOff.prototype.getUIConfig = function () {
-		var defer = libQ.defer();
-		var self = this;
-
-		var lang_code = this.commandRouter.sharedVars.get('language_code');
-
-		self.commandRouter.i18nJson(__dirname + '/i18n/strings_' + lang_code + '.json',
-			__dirname + '/i18n/strings_en.json',
-			__dirname + '/UIConfig.json')
-			.then(function (uiconf) {
-
-				uiconf.sections[0].content[0].value = self.config.get('notPlayingDuration');
-
-				defer.resolve(uiconf);
-			})
-			.fail(function () {
-				defer.reject(new Error());
-			});
-
-		return defer.promise;
-	};
-
-	AutoOff.prototype.getConfigurationFiles = function () {
-		return ['config.json'];
+	if (this.shutdownTimeout) {
+		clearTimeout(this.shutdownTimeout);
 	}
 
-	AutoOff.prototype.setUIConfig = function (data) {
-		var self = this;
-		//Perform your installation tasks here
-	};
+	// Once the Plugin has successfull stopped resolve the promise
+	defer.resolve();
 
-	AutoOff.prototype.getConf = function (varName) {
-		var self = this;
-		//Perform your installation tasks here
-	};
+	return libQ.resolve();
+};
 
-	AutoOff.prototype.setConf = function (varName, varValue) {
-		var self = this;
-		//Perform your installation tasks here
-	};
+AutoOff.prototype.onRestart = function () {
+	var self = this;
+	// Optional, use if you need it
+};
 
 
+// Configuration Methods -----------------------------------------------------------------------------
 
-	// Playback Controls ---------------------------------------------------------------------------------------
-	// If your plugin is not a music_sevice don't use this part and delete it
+AutoOff.prototype.getUIConfig = function () {
+	var defer = libQ.defer();
+	var self = this;
 
+	var lang_code = this.commandRouter.sharedVars.get('language_code');
 
-	AutoOff.prototype.addToBrowseSources = function () {
+	self.commandRouter.i18nJson(__dirname + '/i18n/strings_' + lang_code + '.json',
+		__dirname + '/i18n/strings_en.json',
+		__dirname + '/UIConfig.json')
+		.then(function (uiconf) {
 
-		// Use this function to add your music service plugin to music sources
-		//var data = {name: 'Spotify', uri: 'spotify',plugin_type:'music_service',plugin_name:'spop'};
-		this.commandRouter.volumioAddToBrowseSources(data);
-	};
+			uiconf.sections[0].content[0].value = self.config.get('notPlayingDuration');
 
-	AutoOff.prototype.handleBrowseUri = function (curUri) {
-		var self = this;
+			defer.resolve(uiconf);
+		})
+		.fail(function () {
+			defer.reject(new Error());
+		});
 
-		//self.commandRouter.logger.info(curUri);
-		var response;
+	return defer.promise;
+};
 
+AutoOff.prototype.getConfigurationFiles = function () {
+	return ['config.json'];
+}
 
-		return response;
-	};
+AutoOff.prototype.setUIConfig = function (data) {
+	var self = this;
+	//Perform your installation tasks here
+};
 
+AutoOff.prototype.getConf = function (varName) {
+	var self = this;
+	//Perform your installation tasks here
+};
 
-
-	// Define a method to clear, add, and play an array of tracks
-	AutoOff.prototype.clearAddPlayTrack = function (track) {
-		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::clearAddPlayTrack');
-
-		self.commandRouter.logger.info(JSON.stringify(track));
-
-		return self.sendSpopCommand('uplay', [track.uri]);
-	};
-
-	AutoOff.prototype.seek = function (timepos) {
-		this.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::seek to ' + timepos);
-
-		return this.sendSpopCommand('seek ' + timepos, []);
-	};
-
-	// Stop
-	AutoOff.prototype.stop = function () {
-		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::stop');
-
-
-	};
-
-	// Spop pause
-	AutoOff.prototype.pause = function () {
-		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::pause');
-
-
-	};
-
-	// Get state
-	AutoOff.prototype.getState = function () {
-		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::getState');
-
-
-	};
-
-	//Parse state
-	AutoOff.prototype.parseState = function (sState) {
-		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::parseState');
-
-		//Use this method to parse the state and eventually send it with the following function
-	};
-
-	// Announce updated State
-	AutoOff.prototype.pushState = function (state) {
-		var self = this;
-		self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::pushState');
-
-		return self.commandRouter.servicePushState(state, self.servicename);
-	};
-
-
-	AutoOff.prototype.explodeUri = function (uri) {
-		var self = this;
-		var defer = libQ.defer();
-
-		// Mandatory: retrieve all info for a given URI
-
-		return defer.promise;
-	};
-
-	AutoOff.prototype.getAlbumArt = function (data, path) {
-
-		var artist, album;
-
-		if (data != undefined && data.path != undefined) {
-			path = data.path;
-		}
-
-		var web;
-
-		if (data != undefined && data.artist != undefined) {
-			artist = data.artist;
-			if (data.album != undefined)
-				album = data.album;
-			else album = data.artist;
-
-			web = '?web=' + nodetools.urlEncode(artist) + '/' + nodetools.urlEncode(album) + '/large'
-		}
-
-		var url = '/albumart';
-
-		if (web != undefined)
-			url = url + web;
-
-		if (web != undefined && path != undefined)
-			url = url + '&';
-		else if (path != undefined)
-			url = url + '?';
-
-		if (path != undefined)
-			url = url + 'path=' + nodetools.urlEncode(path);
-
-		return url;
-	};
+AutoOff.prototype.setConf = function (varName, varValue) {
+	var self = this;
+	//Perform your installation tasks here
+};
 
 
 
+// Playback Controls ---------------------------------------------------------------------------------------
+// If your plugin is not a music_sevice don't use this part and delete it
 
 
-	AutoOff.prototype.search = function (query) {
-		var self = this;
-		var defer = libQ.defer();
+AutoOff.prototype.addToBrowseSources = function () {
 
-		// Mandatory, search. You can divide the search in sections using following functions
+	// Use this function to add your music service plugin to music sources
+	//var data = {name: 'Spotify', uri: 'spotify',plugin_type:'music_service',plugin_name:'spop'};
+	this.commandRouter.volumioAddToBrowseSources(data);
+};
 
-		return defer.promise;
-	};
+AutoOff.prototype.handleBrowseUri = function (curUri) {
+	var self = this;
 
-	AutoOff.prototype._searchArtists = function (results) {
-
-	};
-
-	AutoOff.prototype._searchAlbums = function (results) {
-
-	};
-
-	AutoOff.prototype._searchPlaylists = function (results) {
+	//self.commandRouter.logger.info(curUri);
+	var response;
 
 
-	};
+	return response;
+};
 
-	AutoOff.prototype._searchTracks = function (results) {
 
-	};
+
+// Define a method to clear, add, and play an array of tracks
+AutoOff.prototype.clearAddPlayTrack = function (track) {
+	var self = this;
+	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::clearAddPlayTrack');
+
+	self.commandRouter.logger.info(JSON.stringify(track));
+
+	return self.sendSpopCommand('uplay', [track.uri]);
+};
+
+AutoOff.prototype.seek = function (timepos) {
+	this.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::seek to ' + timepos);
+
+	return this.sendSpopCommand('seek ' + timepos, []);
+};
+
+// Stop
+AutoOff.prototype.stop = function () {
+	var self = this;
+	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::stop');
+
+
+};
+
+// Spop pause
+AutoOff.prototype.pause = function () {
+	var self = this;
+	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::pause');
+
+
+};
+
+// Get state
+AutoOff.prototype.getState = function () {
+	var self = this;
+	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::getState');
+
+
+};
+
+//Parse state
+AutoOff.prototype.parseState = function (sState) {
+	var self = this;
+	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::parseState');
+
+	//Use this method to parse the state and eventually send it with the following function
+};
+
+// Announce updated State
+AutoOff.prototype.pushState = function (state) {
+	var self = this;
+	self.commandRouter.pushConsoleMessage('[' + Date.now() + '] ' + 'AutoOff::pushState');
+
+	return self.commandRouter.servicePushState(state, self.servicename);
+};
+
+
+AutoOff.prototype.explodeUri = function (uri) {
+	var self = this;
+	var defer = libQ.defer();
+
+	// Mandatory: retrieve all info for a given URI
+
+	return defer.promise;
+};
+
+AutoOff.prototype.getAlbumArt = function (data, path) {
+
+	var artist, album;
+
+	if (data != undefined && data.path != undefined) {
+		path = data.path;
+	}
+
+	var web;
+
+	if (data != undefined && data.artist != undefined) {
+		artist = data.artist;
+		if (data.album != undefined)
+			album = data.album;
+		else album = data.artist;
+
+		web = '?web=' + nodetools.urlEncode(artist) + '/' + nodetools.urlEncode(album) + '/large'
+	}
+
+	var url = '/albumart';
+
+	if (web != undefined)
+		url = url + web;
+
+	if (web != undefined && path != undefined)
+		url = url + '&';
+	else if (path != undefined)
+		url = url + '?';
+
+	if (path != undefined)
+		url = url + 'path=' + nodetools.urlEncode(path);
+
+	return url;
+};
+
+
+
+
+
+AutoOff.prototype.search = function (query) {
+	var self = this;
+	var defer = libQ.defer();
+
+	// Mandatory, search. You can divide the search in sections using following functions
+
+	return defer.promise;
+};
+
+AutoOff.prototype._searchArtists = function (results) {
+
+};
+
+AutoOff.prototype._searchAlbums = function (results) {
+
+};
+
+AutoOff.prototype._searchPlaylists = function (results) {
+
+
+};
+
+AutoOff.prototype._searchTracks = function (results) {
+
+};
