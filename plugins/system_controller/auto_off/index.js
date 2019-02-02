@@ -44,7 +44,7 @@ AutoOff.prototype.onStart = function () {
 
 	// register a callback for reacting on the system starting / stopping to play
 	socket.on('pushState', (state) => {
-		if (state.status == 'pause') {
+		if (state.status == 'pause' || state.status == 'stop') { // some provides may "stop", like internet-radio
 			const timeout = self.config.get('notPlayingDuration');
 
 			self.logger.info(`Going to shut myself down in ${timeout} seconds, unless something is played`);
@@ -52,7 +52,7 @@ AutoOff.prototype.onStart = function () {
 				self.shutdown();
 			}, timeout * 1000);
 		} else {
-			self.logger.info(`Hoooray - I'm playing again. Cancelled my shutdown`);
+			// self.logger.info(`Hoooray - I'm playing again. Cancelled my shutdown`);
 			clearTimeout(self.shutdownTimeout);
 		}
 	});
