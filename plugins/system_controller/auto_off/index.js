@@ -96,6 +96,7 @@ AutoOff.prototype.onStart = function () {
 			__dirname + '/UIConfig.json')
 			.then(function (uiconf) {
 
+				uiconf.sections[0].content[0].value = self.config.get('notPlayingDuration');
 
 				defer.resolve(uiconf);
 			})
