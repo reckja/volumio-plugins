@@ -20,8 +20,8 @@ function AutoOff(context) {
 }
 
 AutoOff.prototype.shutdown = function () {
-	this.logger.info('You don\'t need me. Bye\n');
-	// this.commandRouter.shutdown();
+	this.logger.info(`No playback for ${this.config.get('notPlayingDuration')}. Shutting down to save energy. Bye\n`);
+	this.commandRouter.shutdown();
 };
 
 AutoOff.prototype.saveIdleDetection = function({notPlayingDuration}){
