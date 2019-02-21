@@ -1,5 +1,5 @@
 {
-	"name": "volumio-nfc-plugin",
+	"name": "raspi_nfc_spi",
 	"version": "0.2.6",
 	"description": "Start and stop playlists on your Raspberry PI with MiFare RC522 and NFC tags",
 	"main": "index.js",
@@ -16,12 +16,13 @@
 		"boot_priority": 10
 	},
 	"dependencies": {
+		"fs-extra": "^0.28.0",
 		"kew": "^0.7.0",
 		"lokijs": "^1.5.6",
 		"mfrc522-rpi": "^1.1.0",
 		"socket.io-client": "^1.4.5",
 		"v-conf": "^1.4.0",
-		"fs-extra": "^0.28.0"
+		"wiringpi-node": "^2.4.4"
 	},
 	"devDependencies": {
 		"release-it": "^10.0.1"
